@@ -1,11 +1,11 @@
 ﻿namespace WebOdevi.Models
 {
-    public class TrainerSpecialization
+    public class TrainerService
     {
         public int id { get; set; }
         public int trainerId { get; set; }
         public Trainer trainer { get; set; }
-        public int specializationId { get; set; }
-        public Specialization specialization { get; set; }
+        public int serviceId { get; set; }
+        public Service service { get; set; }
     }
 }

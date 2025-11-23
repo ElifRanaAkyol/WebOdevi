@@ -1,0 +1,3 @@
+﻿ASP.NET Core MVC kullanılarak geliştirilen bir spor salonu yönetim ve randevu sistemidir.
+Sistem; spor salonlarının hizmetlerini tanımlama, antrenörlerin uzmanlık ve müsaitlik bilgilerini yönetme, üyelerin uygun hizmet ve eğitmenlere göre randevu almasını sağlama gibi temel işlevleri içerir.
+Ayrıca REST API ile raporlama, LINQ tabanlı filtreleme ve yapay zekâ destekli egzersiz/diyet önerisi özellikleri sunar.
