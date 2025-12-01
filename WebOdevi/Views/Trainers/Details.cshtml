@@ -1,0 +1,127 @@
+﻿@using WebOdevi.Models
+@model WebOdevi.Models.Trainer
+
+@{
+    ViewData["Title"] = @Model.fullName + " Detayları ve Randevu";
+}
+
+<div class="container py-5">
+    <div class="row">
+
+        <div class="col-lg-5">
+            <div class="card shadow-lg mb-4 h-100 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-circle me-2"></i> Eğitmen Profili</h4>
+                </div>
+                <div class="card-body">
+
+                    <h2 class="text-center mb-4">@Model.fullName</h2>
+
+                    <div class="mb-3">
+                        <p class="text-muted mb-1">Çalıştığı Merkez:</p>
+                        <p class="lead">
+                            @if (Model.fitnessCenter != null)
+                            {
+                                @Model.fitnessCenter.name 
+                                                        }
+                            else
+
+                            {
+                                <span>Merkez Bilgisi Yok</span>  ;
+                            }
+                        </p>
+                    </div>
+
+                    <hr>
+
+                    <h5 class="mt-4 mb-2"><i class="bi bi-award-fill me-2 text-warning"></i> Uzmanlıkları</h5>
+                    @if (Model.trainerSpecializations != null && Model.trainerSpecializations.Any())
+                    {
+                        <div class="d-flex flex-wrap">
+                            @foreach (var spec in Model.trainerSpecializations)
+                            {
+                                @* Assuming TrainerSpecialization has a 'SpecializationName' property or similar *@
+                                <span class="badge bg-success rounded-pill me-2 mb-2 p-2">
+                                    @spec.specialization.name
+                                </span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted mt-3">Tanımlanmış bir uzmanlık alanı bulunmamaktadır.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card shadow-lg mb-4 border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-calendar-check-fill me-2"></i> Randevu Oluştur</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateAppointment" method="post">
+
+                        <input type="hidden" name="TrainerId" value="@Model.id" />
+
+                        <div class="mb-3">
+                            <label for="ServiceId" class="form-label">Almak İstediğiniz Hizmeti Seçin</label>
+                            <select id="ServiceId" name="ServiceId" class="form-select form-select-lg" required>
+                                <option value="" disabled selected>-- Bir Hizmet Seçiniz --</option>
+                                @if (Model.trainerServices != null && Model.trainerServices.Any())
+                                {
+                                    @foreach (var service in Model.trainerServices)
+                                    {
+                                        @* Assuming TrainerService has a 'Service' navigation property with 'Id' and 'Name' *@
+                                        <option value="@service.service.id">@service.service.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="AppointmentDate" class="form-label">Randevu Tarihi</label>
+                            <input type="date" id="AppointmentDate" name="AppointmentDate" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="AppointmentTime" class="form-label">Saat Seçimi (9:00 - 18:00 Arası)</label>
+                            <select id="AppointmentTime" name="AppointmentTime" class="form-select" required>
+                                <option value="" disabled selected>-- Bir Saat Seçiniz --</option>
+                                @{
+                                    // 9:00'dan 18:00'a kadar saatleri 30 dakikalık aralıklarla oluşturur
+                                    for (int hour = 9; hour <= 17; hour++)
+                                    {
+                                        for (int minute = 0; minute < 60; minute += 30)
+                                        {
+                                            var time = new TimeSpan(hour, minute, 0);
+                                            var timeString = time.ToString(@"hh\:mm");
+                                            <option value="@timeString">@timeString</option>
+                                        }
+                                    }
+                                    // Son saat 18:00
+                                    <option value="18:00">18:00</option>
+                                }
+                            </select>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-calendar-plus-fill me-2"></i> Randevu Oluştur
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Eğitmen Listesine Geri Dön
+        </a>
+    </div>
+</div>
