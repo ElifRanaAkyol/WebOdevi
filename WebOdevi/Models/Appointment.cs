@@ -11,7 +11,7 @@ namespace WebOdevi.Models
         [ForeignKey("userId")]
 
         public User user { get; set; }
-        [Key]
+        
         public int trainerId { get; set; }
         [ForeignKey("trainerId")]
 
