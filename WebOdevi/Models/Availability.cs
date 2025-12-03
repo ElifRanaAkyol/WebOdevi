@@ -6,14 +6,14 @@ namespace WebOdevi.Models
     public class Availability
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         
-        public int trainerId { get; set; }
-        [ForeignKey("trainerId")]
+        public int TrainerId { get; set; }
+        [ForeignKey("TrainerId")]
 
-        public Trainer trainer { get; set; }
+        public Trainer Trainer { get; set; }
         public int StartTime { get; set; }
         public int EndTime { get; set; }
-        public string dayOfWeek { get; set; }
+        public string DayOfWeek { get; set; }
     }
 }

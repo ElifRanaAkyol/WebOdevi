@@ -6,10 +6,10 @@ namespace WebOdevi.Models
     {
 
         [Key]
-        public int id { get; set; }
-        public string name { get; set; }
-        public string address { get; set; }
-        public List<Service> services { get; set; }
-        public List<Trainer> trainers { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public List<Service> Services { get; set; }
+        public List<Trainer> Trainers { get; set; }
     }
 }

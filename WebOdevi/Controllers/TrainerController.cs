@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebOdevi.Controllers
 {
-    [Authorize(Roles ="Admin")]
+
     public class TrainerController : Controller
     {
+
         private readonly ApplicationDbContext _db; //değişkene veri tabanını atadık
         public TrainerController(ApplicationDbContext db)
         {
@@ -21,17 +22,17 @@ namespace WebOdevi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var trainers = _db.Trainer //veritabanındaki db tablosu
-                .Include(t=> t.fitnessCenter)
-                .Include(t => t.trainerSpecializations)
-                .Include(t => t.trainerServices);
+            var trainers = _db.Trainers //veritabanındaki db tablosu
+                .Include(t=> t.FitnessCenter)
+                .Include(t => t.TrainerSpecializations)
+                .Include(t => t.TrainerServices);
 
             return View(await trainers.ToListAsync()); //asenkron olmasaydıu kod bu satırda durup sorgunun bitmesini beklerdi
             //asenksonsa thread beklemez başka işler devaö eder. performans artmış olur
         }
         public IActionResult Trainer(int id)
         {
-            var trainer = _db.Trainer.FirstOrDefault(t => t.id == id); //verilen koşula ilk uyanı getirir
+            var trainer = _db.Trainers.FirstOrDefault(t => t.Id == id); //verilen koşula ilk uyanı getirir
             return View(trainer);
 
         }
@@ -41,15 +42,15 @@ namespace WebOdevi.Controllers
         {
             if (id == null) return NotFound();
 
-            var trainer = await _db.Trainer
-                .Include(t => t.fitnessCenter)
-                .Include(t => t.trainerSpecializations)
-                    .ThenInclude(ts => ts.specialization)
-                .Include(t => t.trainerServices)
-                    .ThenInclude(ts => ts.service)
-                .Include(t => t.trainerAvailability)
-                .Include(t => t.appointments)
-                .FirstOrDefaultAsync(t => t.id == id);
+            var trainer = await _db.Trainers
+                .Include(t => t.FitnessCenter)
+                .Include(t => t.TrainerSpecializations)
+                    .ThenInclude(ts => ts.Specialization)
+                .Include(t => t.TrainerServices)
+                    .ThenInclude(ts => ts.Service)
+                .Include(t => t.TrainerAvailability)
+                .Include(t => t.Appointments)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
             if (trainer == null) return NotFound();
 
@@ -59,7 +60,7 @@ namespace WebOdevi.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.fitnessCenterId = new SelectList(_db.FitnessCenter, "id", "name");
+            ViewBag.FitnessCenterId = new SelectList(_db.FitnessCenters, "id", "name");
             return View();
         }
 
@@ -75,7 +76,7 @@ namespace WebOdevi.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.fitnessCenterId = new SelectList(_db.FitnessCenter, "id", "name", trainer.fitnessCenterId);
+            ViewBag.fitnessCenterId = new SelectList(_db.FitnessCenters, "id", "name", trainer.FitnessCenterId);
             return View(trainer);
         }
 
@@ -86,10 +87,10 @@ namespace WebOdevi.Controllers
             {
                 return NotFound();
             }
-            var trainer = await _db.Trainer
-                .Include(t => t.trainerServices)
-                .Include(t => t.fitnessCenter)
-                .FirstOrDefaultAsync(m => m.id == id); //veritabanında id ye göre arama yapar
+            var trainer = await _db.Trainers
+                .Include(t => t.TrainerServices)
+                .Include(t => t.FitnessCenter)
+                .FirstOrDefaultAsync(m => m.Id == id); //veritabanında id ye göre arama yapar
             if (trainer == null)
             {
                 return NotFound();
@@ -100,8 +101,8 @@ namespace WebOdevi.Controllers
         [ValidateAntiForgeryToken] //csrf ataklarına karşı koruma sağlar
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var trainer = await _db.Trainer.FindAsync(id); //id ye göre bulur
-            _db.Trainer.Remove(trainer); //veritabanından siler
+            var trainer = await _db.Trainers.FindAsync(id); //id ye göre bulur
+            _db.Trainers.Remove(trainer); //veritabanından siler
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

@@ -6,15 +6,15 @@ namespace WebOdevi.Models
     public class TrainerSpecialization
     {
         [Key]
-        public int id { get; set; }
-        public int trainerId { get; set; }
-        [ForeignKey("trainerId")]
+        public int Id { get; set; }
+        public int TrainerId { get; set; }
+        [ForeignKey("TrainerId")]
 
-        public Trainer trainer { get; set; }
+        public Trainer Trainer { get; set; }
 
-        public int specializationId { get; set; }
-        [ForeignKey("specializationId")]
+        public int SpecializationId { get; set; }
+        [ForeignKey("SpecializationId")]
 
-        public Specialization specialization { get; set; }
+        public Specialization Specialization { get; set; }
     }
 }

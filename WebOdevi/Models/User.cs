@@ -6,8 +6,8 @@ namespace WebOdevi.Models
     {
 
         //Domain modellerinde (trainer, service, appointment cd ) int ile tanımlıyorum daha iyi performans için
-        public string fullName { get; set; }
-        public List<Appointment> appointments { get; set; }
+        public string FullName { get; set; }
+        public List<Appointment> Appointments { get; set; }
         
     }
 }

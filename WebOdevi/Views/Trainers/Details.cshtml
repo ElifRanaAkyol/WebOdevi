@@ -2,7 +2,7 @@
 @model WebOdevi.Models.Trainer
 
 @{
-    ViewData["Title"] = @Model.fullName + " Detayları ve Randevu";
+    ViewData["Title"] = @Model.FullName + " Detayları ve Randevu";
 }
 
 <div class="container py-5">
@@ -15,14 +15,14 @@
                 </div>
                 <div class="card-body">
 
-                    <h2 class="text-center mb-4">@Model.fullName</h2>
+                    <h2 class="text-center mb-4">@Model.FullName</h2>
 
                     <div class="mb-3">
                         <p class="text-muted mb-1">Çalıştığı Merkez:</p>
                         <p class="lead">
-                            @if (Model.fitnessCenter != null)
+                            @if (Model.FitnessCenter != null)
                             {
-                                @Model.fitnessCenter.name 
+                                @Model.FitnessCenter.Name 
                                                         }
                             else
 
@@ -35,14 +35,14 @@
                     <hr>
 
                     <h5 class="mt-4 mb-2"><i class="bi bi-award-fill me-2 text-warning"></i> Uzmanlıkları</h5>
-                    @if (Model.trainerSpecializations != null && Model.trainerSpecializations.Any())
+                    @if (Model.TrainerSpecializations != null && Model.TrainerSpecializations.Any())
                     {
                         <div class="d-flex flex-wrap">
-                            @foreach (var spec in Model.trainerSpecializations)
+                            @foreach (var spec in Model.TrainerSpecializations)
                             {
                                 @* Assuming TrainerSpecialization has a 'SpecializationName' property or similar *@
                                 <span class="badge bg-success rounded-pill me-2 mb-2 p-2">
-                                    @spec.specialization.name
+                                    @spec.Specialization.Name
                                 </span>
                             }
                         </div>
@@ -63,18 +63,18 @@
                 <div class="card-body">
                     <form asp-action="CreateAppointment" method="post">
 
-                        <input type="hidden" name="TrainerId" value="@Model.id" />
+                        <input type="hidden" name="TrainerId" value="@Model.Id" />
 
                         <div class="mb-3">
                             <label for="ServiceId" class="form-label">Almak İstediğiniz Hizmeti Seçin</label>
                             <select id="ServiceId" name="ServiceId" class="form-select form-select-lg" required>
                                 <option value="" disabled selected>-- Bir Hizmet Seçiniz --</option>
-                                @if (Model.trainerServices != null && Model.trainerServices.Any())
+                                @if (Model.TrainerServices != null && Model.TrainerServices.Any())
                                 {
-                                    @foreach (var service in Model.trainerServices)
+                                    @foreach (var service in Model.TrainerServices)
                                     {
                                         @* Assuming TrainerService has a 'Service' navigation property with 'Id' and 'Name' *@
-                                        <option value="@service.service.id">@service.service.Name</option>
+                                        <option value="@service.Service.Id">@service.Service.Name</option>
                                     }
                                 }
                             </select>

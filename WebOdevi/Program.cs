@@ -63,11 +63,14 @@ async Task SeedRolesAndAdminAsync(WebApplication app)
     var admin = await userManager.FindByEmailAsync(adminEmail);
     if (admin == null)
     {
-        admin = new User { Email = adminEmail, fullName = "Admin" };
-        var result = await userManager.CreateAsync(admin, "sau123"); // daha güvenli þifre önerildi
+        admin = new User { Email = adminEmail, FullName = "Admin" };
+        var result = await userManager.CreateAsync(admin, "sau123");
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(admin, "Admin");
         }
     }
+
+    //seed database
+    AppDbInitializer.Seed(app);
 }

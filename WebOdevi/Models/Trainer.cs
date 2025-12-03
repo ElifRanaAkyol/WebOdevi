@@ -6,16 +6,18 @@ namespace WebOdevi.Models
     public class Trainer
     {
         [Key]
-        public int id { get; set; }
-        public string fullName { get; set; }
-        
-        public int fitnessCenterId { get; set; }
-        [ForeignKey("fitnessCenterId")]
+        public int Id { get; set; }
+        [Display(Name = "Eğitmen İsmi")]
+        public string FullName { get; set; }
+        public string ProfileImageUrl { get; set; }
 
-        public FitnessCenter fitnessCenter { get; set; }
-        public List<TrainerSpecialization> trainerSpecializations { get; set; }
-        public List<TrainerService> trainerServices { get; set; }
-        public List<Availability> trainerAvailability { get; set; }
-        public List<Appointment> appointments { get; set; }
+        public int FitnessCenterId { get; set; }
+        [ForeignKey("FitnessCenterId")]
+
+        public FitnessCenter FitnessCenter { get; set; }
+        public List<TrainerSpecialization> TrainerSpecializations { get; set; }
+        public List<TrainerService> TrainerServices { get; set; }
+        public List<Availability> TrainerAvailability { get; set; }
+        public List<Appointment> Appointments { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebOdevi.Data;
 
@@ -11,9 +12,11 @@ using WebOdevi.Data;
 namespace WebOdevi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251202164638_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,60 +160,56 @@ namespace WebOdevi.Migrations
 
             modelBuilder.Entity("WebOdevi.Models.Appointment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("AppointmentDate")
+                    b.Property<string>("appointmentDate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AppointmentDuration")
+                    b.Property<int>("appointmentDuration")
                         .HasColumnType("int");
 
-                    b.Property<int>("AppointmentEndTime")
+                    b.Property<int>("appointmentEndTime")
                         .HasColumnType("int");
 
-                    b.Property<int>("AppointmentStartTime")
+                    b.Property<int>("appointmentStartTime")
                         .HasColumnType("int");
 
-                    b.Property<int>("ServiceId")
+                    b.Property<int>("serviceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainerId")
+                    b.Property<int>("trainerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("userId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("serviceId");
 
-                    b.HasIndex("TrainerId");
+                    b.HasIndex("trainerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("userId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointment");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Availability", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<int>("EndTime")
                         .HasColumnType("int");
@@ -218,139 +217,139 @@ namespace WebOdevi.Migrations
                     b.Property<int>("StartTime")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainerId")
+                    b.Property<string>("dayOfWeek")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("trainerId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("TrainerId");
+                    b.HasIndex("trainerId");
 
-                    b.ToTable("Availabilities");
+                    b.ToTable("Availability");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.FitnessCenter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("Address")
+                    b.Property<string>("address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.ToTable("FitnessCenters");
+                    b.ToTable("FitnessCenter");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Service", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FitnessCenterId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ServiceDuration")
+                    b.Property<int>("fitnessCenterId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("serviceDuration")
+                        .HasColumnType("int");
 
-                    b.HasIndex("FitnessCenterId");
+                    b.HasKey("id");
 
-                    b.ToTable("Services");
+                    b.HasIndex("fitnessCenterId");
+
+                    b.ToTable("Service");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Specialization", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.ToTable("Specializations");
+                    b.ToTable("Specialization");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Trainer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("FitnessCenterId")
+                    b.Property<int>("fitnessCenterId")
                         .HasColumnType("int");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("fullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfileImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("id");
 
-                    b.HasKey("Id");
+                    b.HasIndex("fitnessCenterId");
 
-                    b.HasIndex("FitnessCenterId");
-
-                    b.ToTable("Trainers");
+                    b.ToTable("Trainer");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.TrainerService", b =>
                 {
-                    b.Property<int>("TrainerId")
+                    b.Property<int>("trainerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ServiceId")
+                    b.Property<int>("serviceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .HasColumnType("int");
 
-                    b.HasKey("TrainerId", "ServiceId");
+                    b.HasKey("trainerId", "serviceId");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("serviceId");
 
-                    b.ToTable("TrainerServices");
+                    b.ToTable("TrainerService");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.TrainerSpecialization", b =>
                 {
-                    b.Property<int>("TrainerId")
+                    b.Property<int>("trainerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SpecializationId")
+                    b.Property<int>("specializationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .HasColumnType("int");
 
-                    b.HasKey("TrainerId", "SpecializationId");
+                    b.HasKey("trainerId", "specializationId");
 
-                    b.HasIndex("SpecializationId");
+                    b.HasIndex("specializationId");
 
-                    b.ToTable("TrainerSpecializations");
+                    b.ToTable("TrainerSpecialization");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.User", b =>
@@ -371,10 +370,6 @@ namespace WebOdevi.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -408,6 +403,10 @@ namespace WebOdevi.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("fullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -475,135 +474,135 @@ namespace WebOdevi.Migrations
 
             modelBuilder.Entity("WebOdevi.Models.Appointment", b =>
                 {
-                    b.HasOne("WebOdevi.Models.Service", "Service")
-                        .WithMany("Appointments")
-                        .HasForeignKey("ServiceId")
+                    b.HasOne("WebOdevi.Models.Service", "service")
+                        .WithMany("appointments")
+                        .HasForeignKey("serviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebOdevi.Models.Trainer", "Trainer")
-                        .WithMany("Appointments")
-                        .HasForeignKey("TrainerId")
+                    b.HasOne("WebOdevi.Models.Trainer", "trainer")
+                        .WithMany("appointments")
+                        .HasForeignKey("trainerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebOdevi.Models.User", "User")
-                        .WithMany("Appointments")
-                        .HasForeignKey("UserId")
+                    b.HasOne("WebOdevi.Models.User", "user")
+                        .WithMany("appointments")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Service");
+                    b.Navigation("service");
 
-                    b.Navigation("Trainer");
+                    b.Navigation("trainer");
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Availability", b =>
                 {
-                    b.HasOne("WebOdevi.Models.Trainer", "Trainer")
-                        .WithMany("TrainerAvailability")
-                        .HasForeignKey("TrainerId")
+                    b.HasOne("WebOdevi.Models.Trainer", "trainer")
+                        .WithMany("trainerAvailability")
+                        .HasForeignKey("trainerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Trainer");
+                    b.Navigation("trainer");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Service", b =>
                 {
-                    b.HasOne("WebOdevi.Models.FitnessCenter", "FitnessCenter")
-                        .WithMany("Services")
-                        .HasForeignKey("FitnessCenterId")
+                    b.HasOne("WebOdevi.Models.FitnessCenter", "fitnessCenter")
+                        .WithMany("services")
+                        .HasForeignKey("fitnessCenterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FitnessCenter");
+                    b.Navigation("fitnessCenter");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Trainer", b =>
                 {
-                    b.HasOne("WebOdevi.Models.FitnessCenter", "FitnessCenter")
-                        .WithMany("Trainers")
-                        .HasForeignKey("FitnessCenterId")
+                    b.HasOne("WebOdevi.Models.FitnessCenter", "fitnessCenter")
+                        .WithMany("trainers")
+                        .HasForeignKey("fitnessCenterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FitnessCenter");
+                    b.Navigation("fitnessCenter");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.TrainerService", b =>
                 {
-                    b.HasOne("WebOdevi.Models.Service", "Service")
-                        .WithMany("TrainerServices")
-                        .HasForeignKey("ServiceId")
+                    b.HasOne("WebOdevi.Models.Service", "service")
+                        .WithMany("trainerServices")
+                        .HasForeignKey("serviceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebOdevi.Models.Trainer", "Trainer")
-                        .WithMany("TrainerServices")
-                        .HasForeignKey("TrainerId")
+                    b.HasOne("WebOdevi.Models.Trainer", "trainer")
+                        .WithMany("trainerServices")
+                        .HasForeignKey("trainerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Service");
+                    b.Navigation("service");
 
-                    b.Navigation("Trainer");
+                    b.Navigation("trainer");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.TrainerSpecialization", b =>
                 {
-                    b.HasOne("WebOdevi.Models.Specialization", "Specialization")
-                        .WithMany("TrainerSpecializations")
-                        .HasForeignKey("SpecializationId")
+                    b.HasOne("WebOdevi.Models.Specialization", "specialization")
+                        .WithMany("trainerSpecializations")
+                        .HasForeignKey("specializationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebOdevi.Models.Trainer", "Trainer")
-                        .WithMany("TrainerSpecializations")
-                        .HasForeignKey("TrainerId")
+                    b.HasOne("WebOdevi.Models.Trainer", "trainer")
+                        .WithMany("trainerSpecializations")
+                        .HasForeignKey("trainerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Specialization");
+                    b.Navigation("specialization");
 
-                    b.Navigation("Trainer");
+                    b.Navigation("trainer");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.FitnessCenter", b =>
                 {
-                    b.Navigation("Services");
+                    b.Navigation("services");
 
-                    b.Navigation("Trainers");
+                    b.Navigation("trainers");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Service", b =>
                 {
-                    b.Navigation("Appointments");
+                    b.Navigation("appointments");
 
-                    b.Navigation("TrainerServices");
+                    b.Navigation("trainerServices");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Specialization", b =>
                 {
-                    b.Navigation("TrainerSpecializations");
+                    b.Navigation("trainerSpecializations");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.Trainer", b =>
                 {
-                    b.Navigation("Appointments");
+                    b.Navigation("appointments");
 
-                    b.Navigation("TrainerAvailability");
+                    b.Navigation("trainerAvailability");
 
-                    b.Navigation("TrainerServices");
+                    b.Navigation("trainerServices");
 
-                    b.Navigation("TrainerSpecializations");
+                    b.Navigation("trainerSpecializations");
                 });
 
             modelBuilder.Entity("WebOdevi.Models.User", b =>
                 {
-                    b.Navigation("Appointments");
+                    b.Navigation("appointments");
                 });
 #pragma warning restore 612, 618
         }

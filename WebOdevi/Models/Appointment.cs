@@ -6,26 +6,26 @@ namespace WebOdevi.Models
     public class Appointment
     {
         [Key]
-        public int id { get; set; }
-        public string userId { get; set; }
-        [ForeignKey("userId")]
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
 
-        public User user { get; set; }
+        public User User { get; set; }
         
-        public int trainerId { get; set; }
-        [ForeignKey("trainerId")]
+        public int TrainerId { get; set; }
+        [ForeignKey("TrainerId")]
 
-        public Trainer trainer { get; set; }
-        public int serviceId { get; set; }
-        [ForeignKey("serviceId")]
+        public Trainer Trainer { get; set; }
+        public int ServiceId { get; set; }
+        [ForeignKey("ServiceId")]
 
-        public Service service { get; set; }
-        public string appointmentDate { get; set; }
-        public int appointmentStartTime { get; set; }
-        public int appointmentEndTime { get; set; }
-        public int appointmentDuration { get; set; }
+        public Service Service { get; set; }
+        public string AppointmentDate { get; set; }
+        public int AppointmentStartTime { get; set; }
+        public int AppointmentEndTime { get; set; }
+        public int AppointmentDuration { get; set; }
 
-        public AppointmentStatus status { get; set; }
+        public AppointmentStatus Status { get; set; }
 
 
 

@@ -6,14 +6,14 @@ namespace WebOdevi.Models
     public class TrainerService
     {
         [Key]
-        public int id { get; set; }
-        public int trainerId { get; set; }
-        [ForeignKey("trainerId")]
+        public int Id { get; set; }
+        public int TrainerId { get; set; }
+        [ForeignKey("TrainerId")]
 
-        public Trainer trainer { get; set; }
-        public int serviceId { get; set; }
-        [ForeignKey("serviceId")]
+        public Trainer Trainer { get; set; }
+        public int ServiceId { get; set; }
+        [ForeignKey("ServiceId")]
 
-        public Service service { get; set; }
+        public Service Service { get; set; }
     }
 }
