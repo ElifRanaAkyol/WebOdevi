@@ -133,3 +133,106 @@
         .navbar * {
             color: white !important;
         }
+
+
+.custom-header-color {
+    color: #905aa8 !important; 
+}
+
+
+.form-control:focus {
+    color: #212529;
+    background-color: #ffffff;
+    border-color: #000000; 
+    border-width: 2px;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0);
+}
+
+.form-check-input:focus {
+    border-color: #ced4da; 
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0);
+}
+
+.custom-btn-style {
+    background-color: #905aa86c;
+    border-color: #905aa8; 
+    color: #3f1a56; 
+    transition: all 0.3s ease;
+    box-shadow: 0 0.5rem 1rem rgba(144, 90, 168, 0.2);
+}
+
+    .custom-btn-style:hover {
+        background-color: #905aa8; 
+        border-color: #905aa8;
+        color: #ffffff; 
+        box-shadow: 0 0.7rem 1.4rem rgba(144, 90, 168, 0.4);
+        transform: translateY(-1px);
+    }
+.trainer-card {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.trainer-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.trainer-img {
+    object-fit: cover;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+
+.trainer-card {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.trainer-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.trainer-img {
+    object-fit: cover;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+:root {
+    --custom-gray: #6c757d; 
+    --custom-gray-light: #f8f9fa; 
+}
+
+.btn-success {
+    background-color: var(--custom-gray) !important;
+    border-color: var(--custom-gray) !important;
+    color: white !important;
+}
+
+.btn-success:hover {
+    background-color: #5a6268 !important; 
+    border-color: #5a6268 !important;
+}
+
+.btn-danger {
+    background-color: #dc3545 !important; 
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+
+    .btn-danger:hover {
+        background-color: #c82333 !important;
+        border-color: #c82333 !important;
+    }
+
+.btn-outline-info, .btn-outline-primary {
+    color: var(--custom-gray) !important; 
+    border-color: var(--custom-gray) !important; 
+    background-color: transparent !important;
+    --bs-btn-focus-shadow-rgb: 108, 117, 125;
+}
+
+    .btn-outline-info:hover, .btn-outline-primary:hover {
+        background-color: var(--custom-gray) !important; 
+        color: white !important; 
+    }
+

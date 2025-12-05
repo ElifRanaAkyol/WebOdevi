@@ -1,16 +1,17 @@
-using Microsoft.AspNetCore.Identity;
+ï»¿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebOdevi.Data;
 using WebOdevi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DBContext configuration
+// DB Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity configuration
-builder.Services.AddIdentity<User, IdentityRole>(options => {
+// Identity
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
 })
@@ -22,7 +23,7 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Async olarak seed iþlemleri
+// seed
 await SeedRolesAndAdminAsync(app);
 
 if (!app.Environment.IsDevelopment())
@@ -34,6 +35,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();   
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -43,7 +46,7 @@ app.MapControllerRoute(
 app.Run();
 
 
-// Async method to seed roles and admin user
+// Seed method
 async Task SeedRolesAndAdminAsync(WebApplication app)
 {
     using var scope = app.Services.CreateScope();
@@ -52,6 +55,7 @@ async Task SeedRolesAndAdminAsync(WebApplication app)
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<User>>();
 
+    // roles
     string[] roles = new[] { "Admin", "User" };
     foreach (var role in roles)
     {
@@ -59,11 +63,20 @@ async Task SeedRolesAndAdminAsync(WebApplication app)
             await roleManager.CreateAsync(new IdentityRole(role));
     }
 
+    // admin
     var adminEmail = "b231210092@sakarya.edu.tr";
     var admin = await userManager.FindByEmailAsync(adminEmail);
+
     if (admin == null)
     {
-        admin = new User { Email = adminEmail, FullName = "Admin" };
+        admin = new User
+        {
+            Email = adminEmail,
+            UserName = adminEmail,
+            FullName = "Admin",
+            EmailConfirmed = true
+        };
+
         var result = await userManager.CreateAsync(admin, "sau123");
         if (result.Succeeded)
         {
@@ -71,6 +84,6 @@ async Task SeedRolesAndAdminAsync(WebApplication app)
         }
     }
 
-    //seed database
+    // database seed
     AppDbInitializer.Seed(app);
 }

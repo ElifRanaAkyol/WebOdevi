@@ -58,28 +58,60 @@ namespace WebOdevi.Controllers
         }
 
 
+        //public IActionResult Create()
+        //{
+        //    ViewBag.FitnessCenterId = new SelectList(_db.FitnessCenters, "id", "name");
+        //    return View();
+        //}
+
+
+
         public IActionResult Create()
         {
-            ViewBag.FitnessCenterId = new SelectList(_db.FitnessCenters, "id", "name");
+            ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name");
+            ViewBag.Specializations = _db.Specializations.ToList();
+            ViewBag.Services = _db.Services.ToList();
+
             return View();
         }
 
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Trainer trainer)
+        public IActionResult Create(Trainer trainer, int[] SelectedSpecializationIds, int[] SelectedServiceIds)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _db.Add(trainer);
-                await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name");
+                ViewBag.Specializations = _db.Specializations.ToList();
+                ViewBag.Services = _db.Services.ToList();
+                return View(trainer);
             }
 
-            ViewBag.fitnessCenterId = new SelectList(_db.FitnessCenters, "id", "name", trainer.FitnessCenterId);
-            return View(trainer);
+            _db.Trainers.Add(trainer);
+            _db.SaveChanges();
+
+            foreach (var sid in SelectedSpecializationIds)
+            {
+                _db.TrainerSpecializations.Add(new TrainerSpecialization
+                {
+                    TrainerId = trainer.Id,
+                    SpecializationId = sid
+                });
+            }
+
+            foreach (var sid in SelectedServiceIds)
+            {
+                _db.TrainerServices.Add(new TrainerService
+                {
+                    TrainerId = trainer.Id,
+                    ServiceId = sid
+                });
+            }
+
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
+    
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -90,19 +122,18 @@ namespace WebOdevi.Controllers
             var trainer = await _db.Trainers
                 .Include(t => t.TrainerServices)
                 .Include(t => t.FitnessCenter)
-                .FirstOrDefaultAsync(m => m.Id == id); //veritabanında id ye göre arama yapar
+                .FirstOrDefaultAsync(m => m.Id == id); 
             if (trainer == null)
             {
                 return NotFound();
             }
             return View(trainer);
         }
-        [HttpPost, ActionName("Delete")] //aynı isimde iki method olacağı için actionname ile isimlendirdik
-        [ValidateAntiForgeryToken] //csrf ataklarına karşı koruma sağlar
+        [ValidateAntiForgeryToken] 
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var trainer = await _db.Trainers.FindAsync(id); //id ye göre bulur
-            _db.Trainers.Remove(trainer); //veritabanından siler
+            var trainer = await _db.Trainers.FindAsync(id); 
+            _db.Trainers.Remove(trainer); 
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

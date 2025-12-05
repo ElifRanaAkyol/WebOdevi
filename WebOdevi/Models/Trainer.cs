@@ -8,7 +8,10 @@ namespace WebOdevi.Models
         [Key]
         public int Id { get; set; }
         [Display(Name = "Eğitmen İsmi")]
+
         public string FullName { get; set; }
+        [Display(Name = "Profil Fotoğrafı")]
+
         public string ProfileImageUrl { get; set; }
 
         public int FitnessCenterId { get; set; }
