@@ -9,7 +9,6 @@
 
         <h2 class="text-center mb-4 fw-bold custom-header-color">Kayıt Ol</h2>
 
-
         <form method="post">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -38,9 +37,7 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 custom-btn-style">
-                Kayıt Ol
-            </button>
+            <button type="submit" class="btn btn-primary w-100 custom-btn-style">Kayıt Ol</button>
 
         </form>
 
@@ -48,32 +45,29 @@
 </div>
 
 <style>
+    /* Lütfen buradaki renk kodunu kendi özel renginizle değiştirin */
     :root {
-        --custom-color: #905aa86c; 
+        --custom-color: #007bff; /* Örnek Mavi */
     }
 
+    /* Başlık rengini ayarlama */
     .custom-header-color {
-        color: #905aa8 !important;
+        color: var(--custom-color) !important;
     }
 
+    /* Buton rengini ve hover stilini ayarlama */
     .custom-btn-style {
-        background-color: #905aa86c;
-        border-color: #905aa8;
-        color: #3f1a56;
-        transition: all 0.3s ease;
-        box-shadow: 0 0.5rem 1rem rgba(144, 90, 168, 0.2);
+        background-color: var(--custom-color) !important;
+        border-color: var(--custom-color) !important;
+        font-size: 1.1rem; /* Butonu biraz büyütmek isteyebilirsiniz */
     }
 
-    .custom-btn-style:hover {
-       
-        background-color: #905aa8;
-        border-color: #905aa8;
-        color: #ffffff;
-        box-shadow: 0 0.7rem 1.4rem rgba(144, 90, 168, 0.4);
-        transform: translateY(-1px);
-    
-    }
+        .custom-btn-style:hover {
+            background-color: darken(var(--custom-color), 10%) !important; /* Hafifçe koyulaştırma */
+            border-color: darken(var(--custom-color), 10%) !important;
+        }
 
+    /* İsteğe bağlı olarak, input ve label fontlarını küçültebiliriz */
     .form-control {
         font-size: 0.9rem;
     }
