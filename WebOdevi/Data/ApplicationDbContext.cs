@@ -15,6 +15,7 @@ namespace WebOdevi.Data
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<TrainerService> TrainerServices { get; set; }
         public DbSet<TrainerSpecialization> TrainerSpecializations { get; set; }
+
         public DbSet<FitnessCenter> FitnessCenters { get; set; }
 
 

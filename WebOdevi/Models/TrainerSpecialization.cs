@@ -14,7 +14,6 @@ namespace WebOdevi.Models
 
         public int SpecializationId { get; set; }
         [ForeignKey("SpecializationId")]
-
         public Specialization Specialization { get; set; }
     }
 }

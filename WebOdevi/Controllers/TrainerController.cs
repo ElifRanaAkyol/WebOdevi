@@ -111,24 +111,43 @@ namespace WebOdevi.Controllers
             return RedirectToAction("Index");
         }
 
-    
 
-        public async Task<IActionResult> Delete(int? id)
+
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
             var trainer = await _db.Trainers
+                .Include(t => t.TrainerSpecializations)
                 .Include(t => t.TrainerServices)
-                .Include(t => t.FitnessCenter)
-                .FirstOrDefaultAsync(m => m.Id == id); 
+                .Include(t => t.TrainerAvailability)
+                .Include(t => t.Appointments)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
             if (trainer == null)
             {
                 return NotFound();
             }
-            return View(trainer);
+
+            // bağımlı kayıtları siliyoruz
+            if (trainer.TrainerSpecializations != null)
+                _db.TrainerSpecializations.RemoveRange(trainer.TrainerSpecializations);
+
+            if (trainer.TrainerServices != null)
+                _db.TrainerServices.RemoveRange(trainer.TrainerServices);
+
+            if (trainer.TrainerAvailability != null)
+                _db.Availabilities.RemoveRange(trainer.TrainerAvailability);
+
+            if (trainer.Appointments != null)
+                _db.Appointments.RemoveRange(trainer.Appointments);
+
+            // eğitmeni sil
+            _db.Trainers.Remove(trainer);
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
+
         [ValidateAntiForgeryToken] 
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
@@ -136,6 +155,20 @@ namespace WebOdevi.Controllers
             _db.Trainers.Remove(trainer); 
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var trainer = _db.Trainers
+                .Include(t => t.FitnessCenter) //fitness center tablosyula ilişkili olduğu içinftinesscenter bilgilerini
+                                               //alabilmemiz için kullandık
+                .FirstOrDefault(t => t.Id == id); //gelen idye ilk eşleşeni alır
+
+            if(trainer== null)
+                return NotFound(); 
+
+
+            return View(trainer);
         }
 
     }

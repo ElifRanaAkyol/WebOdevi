@@ -89,7 +89,7 @@ public class AccountController : Controller
             return View(model);
         }
 
-        await _userManager.AddToRoleAsync(user, "AppUser");
+        await _userManager.AddToRoleAsync(user, "User");
 
         await _signInManager.SignInAsync(user, false);
 

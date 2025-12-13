@@ -1,0 +1,102 @@
+﻿@model WebOdevi.Models.Trainer
+
+@{
+    ViewData["Title"] = "Eğitmen Detayı";
+}
+
+<div class="container mt-4" style="margin-top:120px; padding:90px 20px;">
+    <div class="card shadow-lg">
+        <div class="row g-0">
+            <div class="col-md-4 text-center p-4">
+                <img src="~/images/Trainers/trainer1.png"
+                     alt="@Model.FullName"
+                     class="img-fluid rounded-circle mb-3"
+                     style="max-width:200px;" />
+                <h4>@Model.FullName</h4>
+                <p class="text-muted">@Model.FitnessCenter?.Name</p>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Uzmanlık Alanları</h5>
+                    @if (Model.TrainerSpecializations != null && Model.TrainerSpecializations.Any())
+                    {
+                        <ul>
+                            @foreach (var spec in Model.TrainerSpecializations)
+                            {
+                                <li>@spec.Specialization.Name</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Uzmanlık bilgisi yok.</p>
+                    }
+
+                    <hr />
+
+                    <h5 class="card-title">Hizmetler</h5>
+                    @if (Model.TrainerServices != null && Model.TrainerServices.Any())
+                    {
+                        <ul>
+                            @foreach (var service in Model.TrainerServices)
+                            {
+                                <li>@service.Service.Name</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Hizmet bilgisi yok.</p>
+                    }
+
+                    <hr />
+
+                    <h5 class="card-title">Müsaitlik</h5>
+                    @if (Model.TrainerAvailability != null && Model.TrainerAvailability.Any())
+                    {
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Gün</th>
+                                    <th>Saat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var avail in Model.TrainerAvailability)
+                                {
+                                    <tr>
+                                        <td>@avail.DayOfWeek</td>
+                                        <td>@avail.StartTime - @avail.EndTime</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Müsaitlik bilgisi yok.</p>
+                    }
+
+                    <div class="appointment">
+                        <h3>Randevu Al</h3>
+                        <a>Gün Seçiniz</a>
+                        <select name="gun">
+                            <option>Pazartesi</option>
+                            <option>Salı</option>
+                            <option>Çarşamba</option>
+                            <option>Perşembe</option>
+                            <option>Cuma</option>
+                            <option>Cumartesi</option>
+                            <option>Pazar</option>
+
+                        </select>
+
+                    </div>
+
+                    <a asp-action="Index" class="btn btn-secondary mt-3">Geri Dön</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
