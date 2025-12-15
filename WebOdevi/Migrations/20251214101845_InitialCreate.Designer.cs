@@ -12,8 +12,8 @@ using WebOdevi.Data;
 namespace WebOdevi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251203234308_setTrainerMigration")]
-    partial class setTrainerMigration
+    [Migration("20251214101845_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,15 +211,12 @@ namespace WebOdevi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DayOfWeek")
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Hour")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EndTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StartTime")
-                        .HasColumnType("int");
 
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");

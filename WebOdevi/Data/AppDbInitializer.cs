@@ -12,7 +12,6 @@ namespace WebOdevi.Data
                 var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
                 context.Database.EnsureCreated();
 
-                // 1️⃣ FitnessCenter ekle
                 FitnessCenter sakaryaGym = null;
                 FitnessCenter cityFitness = null;
 
@@ -39,7 +38,6 @@ namespace WebOdevi.Data
                     cityFitness = context.FitnessCenters.FirstOrDefault(fc => fc.Name == "City Fitness");
                 }
 
-                // 2️⃣ Trainer ekle
                 Trainer ahmet = null;
                 Trainer ayse = null;
 
@@ -76,31 +74,96 @@ namespace WebOdevi.Data
                         new Availability
                         {
                             TrainerId = ahmet.Id,
-                            DayOfWeek = "Pazartesi",
-                            StartTime = 5,
-                            EndTime = 6
+                            DayOfWeek = DaysOfWeek.pazartesi,
+                            Hour = "9.00",
                         },
                         new Availability
                         {
-                            TrainerId = ayse.Id,
-                            DayOfWeek = "Salı",
-                            StartTime = 5,
-                            EndTime = 6
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.pazartesi,
+                            Hour = "10.00",
+                        },
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.pazartesi,
+                            Hour = "11.00",
+                        },
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.pazartesi,
+                            Hour = "12.00",
+                        },
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.sali,
+                            Hour = "13.00",
+                        },
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.carsamba,
+                            Hour = "14.00",
+                        },
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.carsamba,
+                            Hour = "15.00",
+                        },
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.carsamba,
+                            Hour = "16.00",
+                        },
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.carsamba,
+                            Hour = "17.00",
+                        },
+                        
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.persembe,
+                            Hour = "9.00",
+                        },
+                        
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.carsamba,
+                            Hour = "10.00",
+                        },
+                        
+                        new Availability
+                        {
+                            TrainerId = ahmet.Id,
+                            DayOfWeek = DaysOfWeek.carsamba,
+                            Hour = "11.00",
                         }
+                        
                     );
                     context.SaveChanges();
                 }
 
-                // 4️⃣ Specializations ekle
                 Specialization pilates = null;
                 Specialization bodybuilding = null;
                 Specialization cardio = null;
+                Service sPilates = null;
+                Service sBodybuilding = null;
+                Service sCardio = null;
 
                 if (!context.Specializations.Any())
                 {
                     pilates = new Specialization { Name = "Pilates" };
                     bodybuilding = new Specialization { Name = "Bodybuilding" };
                     cardio = new Specialization { Name = "Cardio" };
+
 
                     context.Specializations.AddRange(pilates, bodybuilding, cardio);
                     context.SaveChanges();
@@ -110,15 +173,41 @@ namespace WebOdevi.Data
                     pilates = context.Specializations.FirstOrDefault(s => s.Name == "Pilates");
                     bodybuilding = context.Specializations.FirstOrDefault(s => s.Name == "Bodybuilding");
                     cardio = context.Specializations.FirstOrDefault(s => s.Name == "Cardio");
+
                 }
 
-                // 5️⃣ TrainerSpecializations ekle
                 if (!context.TrainerSpecializations.Any())
                 {
                     context.TrainerSpecializations.AddRange(
                         new TrainerSpecialization { TrainerId = ahmet.Id, SpecializationId = pilates.Id },
                         new TrainerSpecialization { TrainerId = ahmet.Id, SpecializationId = bodybuilding.Id },
-                        new TrainerSpecialization { TrainerId = ayse.Id, SpecializationId = cardio.Id }
+                        new TrainerSpecialization { TrainerId = ahmet.Id, SpecializationId = cardio.Id }
+                    );
+                    context.SaveChanges();
+                }
+
+                if (!context.Services.Any())
+                {
+                    sPilates = new Service { Name = "Pilates" };
+                    sBodybuilding = new Service { Name = "Bodybuilding" };
+                    sCardio = new Service { Name = "Cardio" };
+
+
+                    context.Services.AddRange(sPilates, sBodybuilding, sCardio);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    sPilates = context.Services.FirstOrDefault(s => s.Name == "Pilates");
+                    sBodybuilding = context.Services.FirstOrDefault(s => s.Name == "Bodybuilding");
+                    sCardio = context.Services.FirstOrDefault(s => s.Name == "Cardio");
+                }
+                if (!context.TrainerServices.Any())
+                {
+                    context.TrainerServices.AddRange(
+                        new TrainerService { TrainerId = ahmet.Id, ServiceId = sPilates.Id },
+                        new TrainerService { TrainerId = ahmet.Id, ServiceId = sBodybuilding.Id },
+                        new TrainerService { TrainerId = ahmet.Id, ServiceId = sCardio.Id }
                     );
                     context.SaveChanges();
                 }

@@ -1,5 +1,73 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model WebOdevi.Models.Trainer
+
 @{
+    ViewData["Title"] = "Eğitmeni Düzelt";
 }
+
+<div class="container mt-4" style="margin-top:120px; padding:90px 20px;">
+    <div class="card shadow-lg">    
+        <div class="" style=" padding:0px 10px;">
+            <a asp-action="Index" class="btn btn-secondary mt-3">Geri Dön</a>
+        </div>
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div class="col-md-4 text-center p-4">
+                <img src="~/images/Trainers/trainer1.png"
+                     alt="@Model.FullName"
+                     class="img-fluid rounded-circle mb-3"
+                     style="max-width:200px;" />
+                <div class="form-group mb-3">
+                    <label asp-for="FullName"></label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="FitnessCenter.Name"></label>
+                        <input asp-for="FitnessCenter.Name" class="form-control" value="@Model.FitnessCenter.Name" />
+                        <span asp-validation-for="FitnessCenter.Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">Uzmanlık Alanları</h5>
+                @if (Model.TrainerSpecializations != null && Model.TrainerSpecializations.Any())
+                {
+                    <ul>
+                        @foreach (var spec in Model.TrainerSpecializations)
+                        {
+                            <li>@spec.Specialization.Name</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Uzmanlık bilgisi yok.</p>
+                }
+
+                <hr />
+
+                <h5 class="card-title">Hizmetler</h5>
+                @if (Model.TrainerServices != null && Model.TrainerServices.Any())
+                {
+                    <ul>
+                        @foreach (var service in Model.TrainerServices)
+                        {
+                            <li>@service.Service.Name</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Hizmet bilgisi yok.</p>
+                }
+                    <div class="mb-5 mt-4">
+
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Kaydet</button>
+                </div>
+                    </div>
+
+                </div>
+
+        </form>
+</div>

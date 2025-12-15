@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using WebOdevi.Data;
-using WebOdevi.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using System.Threading.Tasks;
+using WebOdevi.Data;
+using WebOdevi.Data.Enums;
+using WebOdevi.Models;
 
 
 namespace WebOdevi.Controllers
@@ -20,7 +23,7 @@ namespace WebOdevi.Controllers
 
         //
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() //LINQ sorgusu     
         {
             var trainers = _db.Trainers //veritabanındaki db tablosu
                 .Include(t=> t.FitnessCenter)
@@ -54,7 +57,22 @@ namespace WebOdevi.Controllers
 
             if (trainer == null) return NotFound();
 
-            return View(trainer);
+            var vm = new TrainerAppointmentVM
+            {
+                Trainer = trainer,  
+                Appointment = new Appointment(),
+                TrainerServices = trainer.TrainerServices.ToList()
+            };
+
+            ViewBag.DaysOfWeek = Enum.GetValues(typeof(DaysOfWeek))
+                .Cast<DaysOfWeek>().ToList()    
+                   .Select(d => new SelectListItem
+                   {
+                       Value = ((int)d).ToString(),
+                       Text = d.ToString()
+                   }).ToList();
+
+            return View(vm);
         }
 
 
@@ -65,7 +83,7 @@ namespace WebOdevi.Controllers
         //}
 
 
-
+        //formu göstermek için (get)
         public IActionResult Create()
         {
             ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name");
@@ -74,20 +92,27 @@ namespace WebOdevi.Controllers
 
             return View();
         }
-
+        //formu post etmek için
         [HttpPost]
-        public IActionResult Create(Trainer trainer, int[] SelectedSpecializationIds, int[] SelectedServiceIds)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult>Create(Trainer trainer, int[] SelectedSpecializationIds, int[] SelectedServiceIds)
         {
+
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
             if (!ModelState.IsValid)
             {
                 ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name");
-                ViewBag.Specializations = _db.Specializations.ToList();
+                ViewBag.Specializations = _db.Specializations.ToList(); 
                 ViewBag.Services = _db.Services.ToList();
                 return View(trainer);
             }
+            trainer.ProfileImageUrl = "/images/Trainers/trainer1.png";
 
             _db.Trainers.Add(trainer);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             foreach (var sid in SelectedSpecializationIds)
             {
@@ -97,7 +122,6 @@ namespace WebOdevi.Controllers
                     SpecializationId = sid
                 });
             }
-
             foreach (var sid in SelectedServiceIds)
             {
                 _db.TrainerServices.Add(new TrainerService
@@ -107,7 +131,7 @@ namespace WebOdevi.Controllers
                 });
             }
 
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -157,19 +181,38 @@ namespace WebOdevi.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var trainer = _db.Trainers
-                .Include(t => t.FitnessCenter) //fitness center tablosyula ilişkili olduğu içinftinesscenter bilgilerini
-                                               //alabilmemiz için kullandık
-                .FirstOrDefault(t => t.Id == id); //gelen idye ilk eşleşeni alır
+                .Include(t => t.FitnessCenter)
+                .FirstOrDefault(t => t.Id == id);
 
-            if(trainer== null)
-                return NotFound(); 
+            if (trainer == null)
+                return NotFound();
 
+            ViewBag.FitnessCenters =
+                new SelectList(_db.FitnessCenters, "Id", "Name", trainer.FitnessCenterId);
 
             return View(trainer);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Trainer trainer)
+        {
+            var dbTrainer = _db.Trainers.FirstOrDefault(t => t.Id == trainer.Id);
+            if (dbTrainer == null)
+                return NotFound();
+
+            dbTrainer.FullName = trainer.FullName;
+
+
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
 
     }
 }

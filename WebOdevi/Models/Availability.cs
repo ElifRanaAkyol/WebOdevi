@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebOdevi.Data.Enums;
 
 namespace WebOdevi.Models
 {
@@ -12,8 +13,7 @@ namespace WebOdevi.Models
         [ForeignKey("TrainerId")]
 
         public Trainer Trainer { get; set; }
-        public int StartTime { get; set; }
-        public int EndTime { get; set; }
-        public string DayOfWeek { get; set; }
+        public string Hour { get; set; }
+        public DaysOfWeek DayOfWeek { get; set; }
     }
 }

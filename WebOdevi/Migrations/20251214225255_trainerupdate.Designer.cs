@@ -12,8 +12,8 @@ using WebOdevi.Data;
 namespace WebOdevi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251202220223_MigName")]
-    partial class MigName
+    [Migration("20251214225255_trainerupdate")]
+    partial class trainerupdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -166,18 +166,12 @@ namespace WebOdevi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppointmentDate")
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Hour")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AppointmentDuration")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AppointmentEndTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AppointmentStartTime")
-                        .HasColumnType("int");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
@@ -211,15 +205,12 @@ namespace WebOdevi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DayOfWeek")
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Hour")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EndTime")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StartTime")
-                        .HasColumnType("int");
 
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
@@ -260,9 +251,6 @@ namespace WebOdevi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("FitnessCenterId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -271,8 +259,6 @@ namespace WebOdevi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FitnessCenterId");
 
                     b.ToTable("Services");
                 });
@@ -307,6 +293,9 @@ namespace WebOdevi.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -510,17 +499,6 @@ namespace WebOdevi.Migrations
                     b.Navigation("Trainer");
                 });
 
-            modelBuilder.Entity("WebOdevi.Models.Service", b =>
-                {
-                    b.HasOne("WebOdevi.Models.FitnessCenter", "FitnessCenter")
-                        .WithMany("Services")
-                        .HasForeignKey("FitnessCenterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FitnessCenter");
-                });
-
             modelBuilder.Entity("WebOdevi.Models.Trainer", b =>
                 {
                     b.HasOne("WebOdevi.Models.FitnessCenter", "FitnessCenter")
@@ -572,8 +550,6 @@ namespace WebOdevi.Migrations
 
             modelBuilder.Entity("WebOdevi.Models.FitnessCenter", b =>
                 {
-                    b.Navigation("Services");
-
                     b.Navigation("Trainers");
                 });
 

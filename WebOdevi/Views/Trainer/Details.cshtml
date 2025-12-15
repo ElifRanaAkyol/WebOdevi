@@ -1,5 +1,4 @@
-﻿@model WebOdevi.Models.Trainer
-
+﻿@model WebOdevi.Models.TrainerAppointmentVM
 @{
     ViewData["Title"] = "Eğitmen Detayı";
 }
@@ -7,22 +6,26 @@
 <div class="container mt-4" style="margin-top:120px; padding:90px 20px;">
     <div class="card shadow-lg">
         <div class="row g-0">
+            <div class="" style=" padding:0px 10px;">
+                <a asp-action="Index" class="btn btn-secondary mt-3">Geri Dön</a>
+            </div>
+
             <div class="col-md-4 text-center p-4">
                 <img src="~/images/Trainers/trainer1.png"
-                     alt="@Model.FullName"
+                     alt="@Model.Trainer.FullName"
                      class="img-fluid rounded-circle mb-3"
                      style="max-width:200px;" />
-                <h4>@Model.FullName</h4>
-                <p class="text-muted">@Model.FitnessCenter?.Name</p>
+                <h4>@Model.Trainer.FullName</h4>
+                <p class="text-muted">@Model.Trainer.FitnessCenter?.Name</p>
             </div>
 
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title">Uzmanlık Alanları</h5>
-                    @if (Model.TrainerSpecializations != null && Model.TrainerSpecializations.Any())
+                    @if (Model.Trainer.TrainerSpecializations != null && Model.Trainer.TrainerSpecializations.Any())
                     {
                         <ul>
-                            @foreach (var spec in Model.TrainerSpecializations)
+                            @foreach (var spec in Model.Trainer.TrainerSpecializations)
                             {
                                 <li>@spec.Specialization.Name</li>
                             }
@@ -53,7 +56,7 @@
                     <hr />
 
                     <h5 class="card-title">Müsaitlik</h5>
-                    @if (Model.TrainerAvailability != null && Model.TrainerAvailability.Any())
+                    @if (Model.Trainer.TrainerAvailability != null && Model.Trainer.TrainerAvailability.Any())
                     {
                         <table class="table table-sm">
                             <thead>
@@ -63,13 +66,119 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var avail in Model.TrainerAvailability)
-                                {
-                                    <tr>
-                                        <td>@avail.DayOfWeek</td>
-                                        <td>@avail.StartTime - @avail.EndTime</td>
-                                    </tr>
-                                }
+                                <tr>
+
+                                    <td>Pazartesi</td>
+                                    <td>
+
+                                        @foreach (var avail in Model.Trainer.TrainerAvailability)
+                                        {
+                                            @if (@avail.DayOfWeek == WebOdevi.Data.Enums.DaysOfWeek.pazartesi)
+                                            {
+                                                <span> @avail.Hour</span>
+
+                                                <span> - </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>Salı</td>
+                                    <td>
+
+                                        @foreach (var avail in Model.Trainer.TrainerAvailability)
+                                        {
+                                            @if (@avail.DayOfWeek == WebOdevi.Data.Enums.DaysOfWeek.sali)
+                                            {
+                                                <span> @avail.Hour</span>
+
+                                                <span> - </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>Çarşamba</td>
+                                    <td>
+
+                                        @foreach (var avail in Model.Trainer.TrainerAvailability)
+                                        {
+                                            @if (@avail.DayOfWeek == WebOdevi.Data.Enums.DaysOfWeek.carsamba)
+                                            {
+                                                <span> @avail.Hour</span>
+
+                                                <span> - </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>Perşembe</td>
+                                    <td>
+
+                                        @foreach (var avail in Model.Trainer.TrainerAvailability)
+                                        {
+                                            @if (@avail.DayOfWeek == WebOdevi.Data.Enums.DaysOfWeek.persembe)
+                                            {
+                                                <span> @avail.Hour</span>
+
+                                                <span> - </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>Cuma</td>
+                                    <td>
+
+                                        @foreach (var avail in Model.Trainer.TrainerAvailability)
+                                        {
+                                            @if (@avail.DayOfWeek == WebOdevi.Data.Enums.DaysOfWeek.cuma)
+                                            {
+                                                <span> @avail.Hour</span>
+
+                                                <span> - </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>Cumartesi</td>
+                                    <td>
+
+                                        @foreach (var avail in Model.Trainer.TrainerAvailability)
+                                        {
+                                            @if (@avail.DayOfWeek == WebOdevi.Data.Enums.DaysOfWeek.cumartesi)
+                                            {
+                                                <span> @avail.Hour</span>
+
+                                                <span> - </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>Pazar</td>
+                                    <td>
+
+                                        @foreach (var avail in Model.Trainer.TrainerAvailability)
+                                        {
+                                            @if (@avail.DayOfWeek == WebOdevi.Data.Enums.DaysOfWeek.pazar)
+                                            {
+                                                <span> @avail.Hour</span>
+
+                                                <span> - </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
                             </tbody>
                         </table>
                     }
@@ -78,25 +187,72 @@
                         <p class="text-muted">Müsaitlik bilgisi yok.</p>
                     }
 
-                    <div class="appointment">
-                        <h3>Randevu Al</h3>
+                   
+                </div>
+
+                <form asp-controller="Appointment"
+                      asp-action="Create"
+                      method="post">
+                    <h3>Randevu Al</h3>
+                    <div class="date-box">
                         <a>Gün Seçiniz</a>
-                        <select name="gun">
-                            <option>Pazartesi</option>
-                            <option>Salı</option>
-                            <option>Çarşamba</option>
-                            <option>Perşembe</option>
-                            <option>Cuma</option>
-                            <option>Cumartesi</option>
-                            <option>Pazar</option>
 
+                        <div class="form-group mb-3">
+                            <select asp-for="Appointment.DayOfWeek"
+                                    class="form-control"
+                                    asp-items="ViewBag.DaysOfWeek">
+                                <option value="">Günler</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Appointment.Hour">Saat</label>
+                        <select asp-for="Appointment.Hour" class="form-control">
+                            <option value="">Saat Seçiniz</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                            <option value="19:00">19:00</option>
+                            <option value="20:00">20:00</option>
                         </select>
-
                     </div>
 
-                    <a asp-action="Index" class="btn btn-secondary mt-3">Geri Dön</a>
-                </div>
-            </div>
+
+                        <div class="mb-3">
+                            <label for="SelectedServiceId">Hizmet Seçiniz</label>
+                            @if (Model.TrainerServices != null && Model.TrainerServices.Any())
+                            {
+                                <select id="SelectedServiceId" name="SelectedServiceId" class="form-select">
+                                    <option value="">Hizmetler</option>
+                                    @foreach (var ts in Model.TrainerServices)
+                                    {
+                                        <option value="@ts.Service.Id">@ts.Service.Name</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <p class="text-muted">Hizmet bilgisi yok.</p>
+                            }
+                        </div>
+                        <input type="hidden" asp-for="Appointment.TrainerId" value="@Model.Trainer.Id" />
+                        <input type="hidden" asp-for="Appointment.UserId" value="@User.FindFirst("Id")?.Value" />
+
+                        <div class="mb-5 mt-4">
+                            <button type="submit" class="btn btn-primary w-100 mt-3">Kaydet</button>
+
+                        </div>  
+                </form>
+
+           
         </div>
     </div>
+</div>
 </div>

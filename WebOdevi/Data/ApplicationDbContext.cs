@@ -90,12 +90,7 @@ namespace WebOdevi.Data
                 .HasForeignKey(t => t.FitnessCenterId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Service
-            builder.Entity<Service>()
-                .HasOne(s => s.FitnessCenter)
-                .WithMany(f => f.Services)
-                .HasForeignKey(s => s.FitnessCenterId)
-                .OnDelete(DeleteBehavior.Restrict);
+            
         }
     }
 }

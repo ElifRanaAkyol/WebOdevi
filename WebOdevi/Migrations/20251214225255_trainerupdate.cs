@@ -5,25 +5,32 @@
 namespace WebOdevi.Migrations
 {
     /// <inheritdoc />
-    public partial class setTrainerMigration : Migration
+    public partial class trainerupdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.AlterColumn<string>(
                 name: "ProfileImageUrl",
                 table: "Trainers",
                 type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            migrationBuilder.AlterColumn<string>(
                 name: "ProfileImageUrl",
-                table: "Trainers");
+                table: "Trainers",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
         }
     }
 }

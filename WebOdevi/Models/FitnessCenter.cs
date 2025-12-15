@@ -7,9 +7,10 @@ namespace WebOdevi.Models
 
         [Key]
         public int Id { get; set; }
+        [Display(Name = "Spor Salonu İsmi")]
+
         public string Name { get; set; }
         public string Address { get; set; }
-        public List<Service> Services { get; set; }
         public List<Trainer> Trainers { get; set; }
     }
 }

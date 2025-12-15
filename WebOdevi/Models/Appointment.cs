@@ -20,10 +20,8 @@ namespace WebOdevi.Models
         [ForeignKey("ServiceId")]
 
         public Service Service { get; set; }
-        public string AppointmentDate { get; set; }
-        public int AppointmentStartTime { get; set; }
-        public int AppointmentEndTime { get; set; }
-        public int AppointmentDuration { get; set; }
+        public string Hour { get; set; }
+        public  DaysOfWeek DayOfWeek { get; set; }
 
         public AppointmentStatus Status { get; set; }
 
