@@ -1,0 +1,49 @@
+﻿@model WebOdevi.Models.ViewModels.DietInputViewModel
+
+@{
+    ViewData["Title"] = "Diyet Önerisi";
+}
+
+<h2>Diyet Planı Oluştur</h2>
+
+<form asp-action="GenerateDiet" method="post">
+    <div>
+        <label>Boy (cm)</label>
+        <input asp-for="Height" class="form-control" />
+        <span asp-validation-for="Height"></span>
+    </div>
+
+    <div>
+        <label>Kilo (kg)</label>
+        <input asp-for="Weight" class="form-control" />
+        <span asp-validation-for="Weight"></span>
+    </div>
+
+    <div>
+        <label>Vücut Tipi</label>
+        <select asp-for="BodyType" class="form-control">
+            <option value="">Seçiniz</option>
+            <option>Endomorph</option>
+            <option>Mesomorph</option>
+            <option>Ectomorph</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Hedef</label>
+        <select asp-for="Goal" class="form-control">
+            <option value="">Seçiniz</option>
+            <option>Kilo Verme</option>
+            <option>Kilo Alma</option>
+            <option>Koru</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">
+        Plan Oluştur
+    </button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

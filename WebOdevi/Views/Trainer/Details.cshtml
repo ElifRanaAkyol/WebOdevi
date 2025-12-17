@@ -1,9 +1,23 @@
-﻿@model WebOdevi.Models.TrainerAppointmentVM
+﻿@using System.Security.Claims
+@model WebOdevi.Models.TrainerAppointmentVM
 @{
     ViewData["Title"] = "Eğitmen Detayı";
 }
 
 <div class="container mt-4" style="margin-top:120px; padding:90px 20px;">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger mt-3">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success mt-3">
+            @TempData["Success"]
+        </div>
+    }
     <div class="card shadow-lg">
         <div class="row g-0">
             <div class="" style=" padding:0px 10px;">
@@ -189,7 +203,19 @@
 
                    
                 </div>
-
+                @if (!User.Identity.IsAuthenticated)
+{
+                <div class="alert">
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       asp-route-returnUrl="@Context.Request.Path"
+                       class="text-decoration-none fw-bold">
+                        Giriş yapmadan randevu alamazsınız. Giriş yapmak için tıklayın.
+                    </a>
+                </div>
+                }
+                else if(User.IsInRole("User"))
+                {
                 <form asp-controller="Appointment"
                       asp-action="Create"
                       method="post">
@@ -233,7 +259,7 @@
                                     <option value="">Hizmetler</option>
                                     @foreach (var ts in Model.TrainerServices)
                                     {
-                                        <option value="@ts.Service.Id">@ts.Service.Name</option>
+                                        <option value="@ts.Service.Id">@ts.Service.Name @ts.Service.trainingFee TL</option>
                                     }
                                 </select>
                             }
@@ -242,8 +268,8 @@
                                 <p class="text-muted">Hizmet bilgisi yok.</p>
                             }
                         </div>
-                        <input type="hidden" asp-for="Appointment.TrainerId" value="@Model.Trainer.Id" />
-                        <input type="hidden" asp-for="Appointment.UserId" value="@User.FindFirst("Id")?.Value" />
+                        <input type="hidden" name="Appointment.UserId" value="@User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)" />
+                        <input type="hidden" name="Appointment.TrainerId" value="@Model.Trainer.Id" />
 
                         <div class="mb-5 mt-4">
                             <button type="submit" class="btn btn-primary w-100 mt-3">Kaydet</button>
@@ -251,7 +277,7 @@
                         </div>  
                 </form>
 
-           
+           }
         </div>
     </div>
 </div>

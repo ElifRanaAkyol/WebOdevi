@@ -1,43 +1,96 @@
 ﻿@model WebOdevi.Models.ViewModels.LoginVM
 
-<div class="row mt-5 justify-content-center" style=" margin-top:120px; padding:100px 20px; ">
-    <div class="col-sm-10 col-md-6 col-lg-4">
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-body p-4 p-md-5">
+@{
+    ViewData["Title"] = "Kullanıcı Girişi";
+}
 
-                <h2 class="text-center mb-4 fw-bold custom-header-color">Kullanıcı Girişi</h2>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 85vh; margin-top:60px;">
+        <div class="col-sm-10 col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-md-5 bg-white">
 
-                <form asp-action="Login" method="post">
+                    <h2 class="text-center mb-4 fw-bold custom-header-color">Kullanıcı Girişi</h2>
 
-                    <div class="mb-3">
-                        <label asp-for="Email" class="form-label">E-posta Adresi</label>
-                        <input asp-for="Email" class="form-control rounded-3" placeholder="örnek@eposta.com" />
-                    </div>
+                    <form asp-action="Login" method="post">
 
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Şifre</label>
-                        <input asp-for="Password" type="password" class="form-control rounded-3" placeholder="Şifrenizi girin" />
-                    </div>
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2 border-0 rounded-3 mb-4"></div>
+                        }
 
-                   
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold text-dark">E-posta Adresi</label>
+                            <input asp-for="Email" class="form-control rounded-3 bg-light border-0 py-2" placeholder="örnek@eposta.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 custom-btn-style">
-                        Giriş Yap
-                    </button>
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label fw-semibold text-dark">Şifre</label>
+                            <input asp-for="Password" type="password" class="form-control rounded-3 bg-light border-0 py-2" placeholder="Şifrenizi girin" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
 
-                    
-                </form>
+                        <button type="submit" class="btn btn-lg w-100 rounded-3 fw-bold custom-btn-style py-2">
+                            Giriş Yap
+                        </button>
+
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Hesabınız yok mu?</span>
+                            <a asp-action="Register" class="text-dark fw-bold small text-decoration-none ms-1">Kayıt Ol</a>
+                        </div>
+
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<style>
-  
 
-    .form-control {
-        font-size: 0.875rem; 
-        padding: 0.75rem 0.75rem;
+<style>
+    :root {
+        --header-purple: #905aa8;
+        --btn-purple: #3f1a56;
+        --btn-hover: #532371; 
     }
 
-   
+    .custom-header-color {
+        color: var(--header-purple) !important;
+    }
+
+    .custom-btn-style {
+        background-color: var(--btn-purple) !important;
+        border-color: var(--btn-purple) !important;
+        color: white !important;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(63, 26, 86, 0.2);
+    }
+
+        .custom-btn-style:hover {
+            background-color: var(--btn-hover) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(63, 26, 86, 0.3);
+        }
+
+    .form-control:focus {
+        background-color: #fff;
+        border: 1px solid var(--header-purple);
+        box-shadow: 0 0 0 0.25rem rgba(144, 90, 168, 0.15);
+    }
+
+    .form-control {
+        font-size: 0.95rem;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+    }
+
+    body {
+        background-color: #f4f7f6;
+    }
 </style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

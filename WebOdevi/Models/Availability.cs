@@ -13,7 +13,7 @@ namespace WebOdevi.Models
         [ForeignKey("TrainerId")]
 
         public Trainer Trainer { get; set; }
-        public string Hour { get; set; }
-        public DaysOfWeek DayOfWeek { get; set; }
+        public string? Hour { get; set; }
+        public DaysOfWeek? DayOfWeek { get; set; }
     }
 }

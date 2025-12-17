@@ -9,7 +9,9 @@ namespace WebOdevi.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int ServiceDuration { get; set; } = 0;
-        
+        public int trainingFee { get; set; }
+
+
         public List<TrainerService> TrainerServices { get; set; }
         public List<Appointment> Appointments { get; set; }
 

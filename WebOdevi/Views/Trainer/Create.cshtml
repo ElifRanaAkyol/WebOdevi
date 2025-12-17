@@ -68,6 +68,38 @@
                             }
                         </div>
                     </div>
+                    <div class="form-group mb-3">
+                        <label>Müsaitlik</label>
+
+                        <div class="border p-3 rounded" style="max-height: 300px; overflow-y: auto;">
+
+                            @foreach (WebOdevi.Data.Enums.DaysOfWeek day in Enum.GetValues(typeof(WebOdevi.Data.Enums.DaysOfWeek)))
+                            {
+                                <strong>@day</strong>
+                                <div class="ms-3 mb-2">
+
+                                    @for (int hour = 9; hour <= 20; hour++)
+                                    {
+                                        string hourText = hour.ToString("D2") + ":00";
+                                        string value = $"{day}|{hourText}";
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   name="SelectedAvailabilities"
+                                                   value="@value" />
+
+                                            <label class="form-check-label">@hourText</label>
+                                        </div>
+                                    }
+
+                                </div>
+                                <hr />
+                            }
+
+                        </div>
+                    </div>
+
 
                     <button type="submit" class="btn btn-primary w-100 mt-3">Kaydet</button>
 

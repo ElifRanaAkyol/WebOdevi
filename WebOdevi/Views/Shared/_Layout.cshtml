@@ -36,6 +36,11 @@
                                  Eğitmenler
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Diet" asp-action="Index">
+                                AI Diyet Önerisi
+                            </a>
+                        </li>
 
                         
                     </ul>
@@ -54,11 +59,29 @@
                                 </a>
                             </li>
                         }
+                        else if(User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light" asp-area="" asp-controller="Account" asp-action="Logout">
+                                    Çıkış Yap
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light" asp-area="" asp-controller="Account" asp-action="MyAppointments">
+                                    Randevularım
+                                </a>
+                            </li>
+                        }
                         else
                         {
                             <li class="nav-item">
                                 <a class="btn btn-outline-light" asp-area="" asp-controller="Account" asp-action="Logout">
                                     Çıkış Yap
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light" asp-area="" asp-controller="Account" asp-action="Logout">
+                                    Admin Paneli
                                 </a>
                             </li>
                         }

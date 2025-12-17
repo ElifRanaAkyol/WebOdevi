@@ -1,0 +1,48 @@
+﻿@model IEnumerable<WebOdevi.Models.Appointment>
+<div class="container mt-5" style="padding-top:60px;">
+
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body">
+            <table class="table ">
+                <thead style="background-color: #3f1a56; color: white;">
+                    <tr>
+                        <th>Hizmet</th>
+                        <th>Eğitmen</th>
+                        <th>Gün</th>
+                        <th>Saat</th>
+                        <th>Ücret</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr>
+
+                            <td>@item.Service.Name</td>
+                            <td>@item.Trainer.FullName</td>
+                            <td>@item.DayOfWeek</td>
+                            <td>@item.Hour</td>
+
+                            <td>@item.Service.trainingFee TL   </td>
+                            <td class="btn-bin" asp-action="Delete" asp-route-id="@Id">
+                                <i class="fa-solid fa-trash"></i>
+                            </td>
+                                
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://kit.fontawesome.com/0e946e33ac.js" crossorigin="anonymous"></script>
+<style>
+    .btn-bin{
+        transition: 0.2s;
+    }
+    .btn-bin:hover{
+        color: red ;
+    }
+</style>

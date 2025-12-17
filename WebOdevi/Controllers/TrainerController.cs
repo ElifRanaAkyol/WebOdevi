@@ -15,7 +15,7 @@ namespace WebOdevi.Controllers
     public class TrainerController : Controller
     {
 
-        private readonly ApplicationDbContext _db; //değişkene veri tabanını atadık
+        private readonly ApplicationDbContext _db; //değişkene veri tabanını atadık         
         public TrainerController(ApplicationDbContext db)
         {
             _db = db;
@@ -95,47 +95,83 @@ namespace WebOdevi.Controllers
         //formu post etmek için
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult>Create(Trainer trainer, int[] SelectedSpecializationIds, int[] SelectedServiceIds)
+        public async Task<IActionResult> Create(Trainer trainer, int[] SelectedSpecializationIds, int[] SelectedServiceIds, List<string> SelectedAvailabilities)
         {
-
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            {
-                Console.WriteLine(error.ErrorMessage);
-            }
+            // Validasyon kontrolü
             if (!ModelState.IsValid)
             {
                 ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name");
-                ViewBag.Specializations = _db.Specializations.ToList(); 
+                ViewBag.Specializations = _db.Specializations.ToList();
                 ViewBag.Services = _db.Services.ToList();
                 return View(trainer);
             }
-            trainer.ProfileImageUrl = "/images/Trainers/trainer1.png";
 
-            _db.Trainers.Add(trainer);
-            await _db.SaveChangesAsync();
-
-            foreach (var sid in SelectedSpecializationIds)
+            try
             {
-                _db.TrainerSpecializations.Add(new TrainerSpecialization
+                if (string.IsNullOrEmpty(trainer.ProfileImageUrl))
                 {
-                    TrainerId = trainer.Id,
-                    SpecializationId = sid
-                });
-            }
-            foreach (var sid in SelectedServiceIds)
-            {
-                _db.TrainerServices.Add(new TrainerService
-                {
-                    TrainerId = trainer.Id,
-                    ServiceId = sid
-                });
-            }
+                    trainer.ProfileImageUrl = "/images/Trainers/trainer1.png";
+                }
 
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+                _db.Trainers.Add(trainer);
+                await _db.SaveChangesAsync(); 
+
+                if (SelectedSpecializationIds != null)
+                {
+                    foreach (var sid in SelectedSpecializationIds)
+                    {
+                        _db.TrainerSpecializations.Add(new TrainerSpecialization
+                        {
+                            TrainerId = trainer.Id,
+                            SpecializationId = sid
+                        });
+                    }
+                }
+
+                if (SelectedServiceIds != null)
+                {
+                    foreach (var sid in SelectedServiceIds)
+                    {
+                        _db.TrainerServices.Add(new TrainerService
+                        {
+                            TrainerId = trainer.Id,
+                            ServiceId = sid
+                        });
+                    }
+                }
+
+                if (SelectedAvailabilities != null)
+                {
+                    foreach (var item in SelectedAvailabilities)
+                    {
+                        var parts = item.Split('|');
+                        if (parts.Length == 2 && Enum.TryParse<DaysOfWeek>(parts[0], out var day))
+                        {
+                            _db.Availabilities.Add(new Availability
+                            {
+                                TrainerId = trainer.Id,
+                                DayOfWeek = day,
+                                Hour = parts[1]
+                            });
+                        }
+                    }
+                }
+
+                await _db.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                
+                ModelState.AddModelError("", "Hata: " + ex.InnerException?.Message ?? ex.Message);
+
+                ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name");
+                ViewBag.Specializations = _db.Specializations.ToList();
+                ViewBag.Services = _db.Services.ToList();
+                return View(trainer);
+            }
         }
-
-
 
         public async Task<IActionResult> Delete(int id)
         {
@@ -199,19 +235,40 @@ namespace WebOdevi.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Trainer trainer)
+        public async Task<IActionResult> Edit(int id, Trainer model)
         {
-            var dbTrainer = _db.Trainers.FirstOrDefault(t => t.Id == trainer.Id);
-            if (dbTrainer == null)
+            if (id != model.Id)
                 return NotFound();
 
-            dbTrainer.FullName = trainer.FullName;
+            var trainer = await _db.Trainers
+                .Include(t => t.FitnessCenter)
+                .Include(t => t.TrainerSpecializations)
+                .Include(t => t.TrainerServices)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
+            if (trainer == null)
+                return NotFound();
 
-            _db.SaveChanges();
-             
-            return RedirectToAction("Index");
+            if (!string.IsNullOrWhiteSpace(model.FullName) &&
+                trainer.FullName != model.FullName)
+            {
+                trainer.FullName = model.FullName;
+            }
+
+            if (trainer.FitnessCenter != null &&
+                model.FitnessCenter != null &&
+                !string.IsNullOrWhiteSpace(model.FitnessCenter.Name) &&
+                trainer.FitnessCenter.Name != model.FitnessCenter.Name)
+            {
+                trainer.FitnessCenter.Name = model.FitnessCenter.Name;
+            }
+
+            
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
 
     }

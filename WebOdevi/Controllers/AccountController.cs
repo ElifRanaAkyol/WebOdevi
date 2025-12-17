@@ -1,18 +1,24 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using WebOdevi.Models;
 using WebOdevi.Models.ViewModels;
+using WebOdevi.Data;
+using WebOdevi.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 public class AccountController : Controller
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-
-    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+    private readonly ApplicationDbContext _db;
+    
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext db)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _db = db;
     }
 
     [HttpGet]
@@ -35,7 +41,6 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // SignIn
         var result = await _signInManager.PasswordSignInAsync(
             user,
             model.Password,
@@ -48,8 +53,7 @@ public class AccountController : Controller
             return View(model);
         }
 
-        if (await _userManager.IsInRoleAsync(user, "Admin"))
-            return RedirectToAction("Index", "Trainer");
+        
 
         return RedirectToAction("Index", "Home");
     }
@@ -94,6 +98,22 @@ public class AccountController : Controller
         await _signInManager.SignInAsync(user, false);
 
         return RedirectToAction("Index", "Home");
+    }
+
+    [Authorize] //SADECE GİRİŞ YAPILMIŞSA ERİŞİLEBİİLRİ
+    public async Task<IActionResult> MyAppointments()
+    {
+        var userId = _userManager.GetUserId(User);
+
+        var appointments = await _db.Appointments
+            .Include(a => a.Trainer)
+            .Include(a => a.Service)
+            
+            .Where(a => a.UserId == userId)
+            .ToListAsync();
+
+   
+        return View(appointments);
     }
 
 }

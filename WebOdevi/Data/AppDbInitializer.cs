@@ -154,18 +154,24 @@ namespace WebOdevi.Data
                 Specialization pilates = null;
                 Specialization bodybuilding = null;
                 Specialization cardio = null;
+                Specialization yoga = null;
+                Specialization personalTraining = null;
                 Service sPilates = null;
                 Service sBodybuilding = null;
                 Service sCardio = null;
+                Service sYoga= null;
+                Service sPersonalTraining = null;
 
                 if (!context.Specializations.Any())
                 {
                     pilates = new Specialization { Name = "Pilates" };
                     bodybuilding = new Specialization { Name = "Bodybuilding" };
                     cardio = new Specialization { Name = "Cardio" };
+                    yoga = new Specialization { Name = "Yoga" };
+                    personalTraining = new Specialization { Name = "Personal Training" };
 
 
-                    context.Specializations.AddRange(pilates, bodybuilding, cardio);
+                    context.Specializations.AddRange(pilates, bodybuilding, cardio, personalTraining, yoga);
                     context.SaveChanges();
                 }
                 else
@@ -173,6 +179,8 @@ namespace WebOdevi.Data
                     pilates = context.Specializations.FirstOrDefault(s => s.Name == "Pilates");
                     bodybuilding = context.Specializations.FirstOrDefault(s => s.Name == "Bodybuilding");
                     cardio = context.Specializations.FirstOrDefault(s => s.Name == "Cardio");
+                    yoga = context.Specializations.FirstOrDefault(s => s.Name == "Yoga");
+                    personalTraining = context.Specializations.FirstOrDefault(s => s.Name == "Personal Training");
 
                 }
 
@@ -188,12 +196,14 @@ namespace WebOdevi.Data
 
                 if (!context.Services.Any())
                 {
-                    sPilates = new Service { Name = "Pilates" };
-                    sBodybuilding = new Service { Name = "Bodybuilding" };
-                    sCardio = new Service { Name = "Cardio" };
+                    sPilates = new Service { Name = "Pilates" , trainingFee =900};
+                    sBodybuilding = new Service { Name = "Bodybuilding", trainingFee = 1000 };
+                    sCardio = new Service { Name = "Cardio",  trainingFee = 850 };
+                    sYoga = new Service { Name = "Yoga" , trainingFee = 750 };
+                    sPersonalTraining = new Service { Name = "Personal Training" ,trainingFee = 800 };
 
 
-                    context.Services.AddRange(sPilates, sBodybuilding, sCardio);
+                    context.Services.AddRange(sPilates, sBodybuilding, sCardio, sYoga,sPersonalTraining);
                     context.SaveChanges();
                 }
                 else
@@ -201,6 +211,8 @@ namespace WebOdevi.Data
                     sPilates = context.Services.FirstOrDefault(s => s.Name == "Pilates");
                     sBodybuilding = context.Services.FirstOrDefault(s => s.Name == "Bodybuilding");
                     sCardio = context.Services.FirstOrDefault(s => s.Name == "Cardio");
+                    sYoga = context.Services.FirstOrDefault(s => s.Name == "Yoga");
+                    sPersonalTraining = context.Services.FirstOrDefault(s => s.Name == "Personal Training");
                 }
                 if (!context.TrainerServices.Any())
                 {

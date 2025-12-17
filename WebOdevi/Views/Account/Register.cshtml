@@ -2,82 +2,94 @@
 
 @{
     ViewData["Title"] = "Kayıt Ol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row justify-content-center" style="margin-top:120px; ">
-    <div class="col-sm-10 col-md-4" style="background:white; padding:40px; border-radius:12px;">
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 85vh; margin-top:120px;">
+        <div class="col-sm-10 col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-md-5 bg-white">
 
-        <h2 class="text-center mb-4 fw-bold custom-header-color">Kayıt Ol</h2>
+                    <h2 class="text-center mb-4 fw-bold custom-header-color">Kayıt Ol</h2>
 
-        <form method="post">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2 border-0 rounded-3 mb-3"></div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold text-dark">E-posta</label>
+                            <input asp-for="Email" class="form-control rounded-3 bg-light border-0 py-2" placeholder="isim@example.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
 
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label fw-semibold text-dark">Ad Soyad</label>
+                            <input asp-for="FullName" class="form-control rounded-3 bg-light border-0 py-2" placeholder="Adınız Soyadınız" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold text-dark">Şifre</label>
+                            <input asp-for="Password" type="password" class="form-control rounded-3 bg-light border-0 py-2" placeholder="******" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold text-dark">Şifre Tekrar</label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control rounded-3 bg-light border-0 py-2" placeholder="******" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        @* Belirlediğiniz Koyu Mor Buton (#3f1a56) *@
+                        <button type="submit" class="btn btn-lg w-100 rounded-3 fw-bold custom-btn-style py-2">Kayıt Ol</button>
+
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Zaten hesabınız var mı?</span>
+                            <a href="/Account/Login" class="text-dark fw-bold small text-decoration-none ms-1">Giriş Yap</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Ad Soyad</label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Şifre</label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Şifre Tekrar</label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 custom-btn-style">Kayıt Ol</button>
-
-        </form>
-
+        </div>
     </div>
 </div>
 
 <style>
-    /* Lütfen buradaki renk kodunu kendi özel renginizle değiştirin */
     :root {
-        --custom-color: #007bff; /* Örnek Mavi */
+        --header-purple: #905aa8;
+        --btn-purple: #3f1a56;
+        --btn-hover: #532371;
     }
 
-    /* Başlık rengini ayarlama */
+    body {
+        background-color: #f8f9fa;
+    }
+
+    /* Başlık Stili */
     .custom-header-color {
-        color: var(--custom-color) !important;
+        color: var(--header-purple) !important;
+        font-weight: 700;
     }
 
-    /* Buton rengini ve hover stilini ayarlama */
+    /* Buton Stili */
     .custom-btn-style {
-        background-color: var(--custom-color) !important;
-        border-color: var(--custom-color) !important;
-        font-size: 1.1rem; /* Butonu biraz büyütmek isteyebilirsiniz */
+        background-color: var(--btn-purple) !important;
+        border-color: var(--btn-purple) !important;
+        color: white !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(63, 26, 86, 0.2);
     }
 
         .custom-btn-style:hover {
-            background-color: darken(var(--custom-color), 10%) !important; /* Hafifçe koyulaştırma */
-            border-color: darken(var(--custom-color), 10%) !important;
+            background-color: var(--btn-hover) !important;
+            border-color: var(--btn-hover) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(63, 26, 86, 0.3);
         }
 
-    /* İsteğe bağlı olarak, input ve label fontlarını küçültebiliriz */
-    .form-control {
-        font-size: 0.9rem;
-    }
-
-    .form-label {
-        font-size: 0.95rem;
-    }
-
-</style>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+    /* Input Odaklanma Efekti */
+    .form-control:focus {
+        background-color: #fff;
+        border: 1px solid var(--header-purple) !important;
+        box-shadow: 0 0 0 0.25rem rgba(144, 90, 168,
