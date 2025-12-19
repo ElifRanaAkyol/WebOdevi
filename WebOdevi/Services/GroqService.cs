@@ -3,8 +3,8 @@ using System.Text.Json;
 
 public class GroqService
 {
-    private readonly string _apiKey = ""; 
-    private readonly string _apiUrl = "";
+    private readonly string _apiKey = "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"; 
+    private readonly string _apiUrl = "https://api.groq.com/openai/v1/chat/completions";
     private readonly HttpClient _httpClient;
 
     public GroqService(HttpClient httpClient)

@@ -12,12 +12,12 @@
             @foreach (var item in Model)
             {
                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-4">
-                    <div class="card h-100 shadow-lg border-0 trainer-card">
+                    <div class="card h-100 shadow-lg  trainer-card">
                         <div class="card-body text-center">
-                            <img class="rounded-circle mb-3 trainer-img"
+                            <img class=" mb-3 trainer-img"
                                  src="~/images/Trainers/trainer1.png"
                                  alt="@item.FullName"
-                                 style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #007bff;" />
+                                 style="width: 150px; height: 150px; object-fit: cover; ;" />
 
                             <h5 class="card-title text-dark">@item.FullName</h5>
                             <p class="card-text text-muted">
@@ -25,7 +25,6 @@
                                  <strong>@item.FitnessCenter.Name</strong>
                             </p>
 
-                            <hr class="my-3" />
 
                             <div class="d-flex justify-content-center flex-wrap gap-2">
                                 <a class="btn btn-outline-info btn-sm flex-fill" asp-action="Details" asp-route-id="@item.Id">

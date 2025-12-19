@@ -3,7 +3,7 @@
         <div class="col-md-6">
             @if (User.IsInRole("Admin"))
             {
-                <a asp-controller="FitnessCenter" asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-4">
+                <a asp-controller="FitnessCenter" asp-action="Create" class="btn btn-success shadow-sm  px-1">
                     <i class="fa-solid fa-plus-circle me-1"></i> Yeni Spor Salonu Ekle
                 </a>
             }
@@ -72,7 +72,7 @@
 
                     container.innerHTML += `
                         <div class="col-md-6 col-lg-4">
-                            <div class="card fitness-card shadow-sm h-100 rounded-4">
+                            <div class="card fitness-card shadow-sm h-100 rounded-1">
                                 <div class="card-body p-4 d-flex flex-column">
                                     <h5 class="fw-bold mb-1" style="color: #3f1a56;">${fc.name}</h5>
                                     <p class="text-muted small mb-3">

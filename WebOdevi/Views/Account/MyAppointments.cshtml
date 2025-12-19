@@ -2,7 +2,7 @@
 @model IEnumerable<WebOdevi.Models.Appointment>
 <div class="container mt-5" style="padding-top:60px;">
 
-    <div class="card shadow border-0 rounded-4">
+    <div class="card shadow border-0 rounded-1">
         <div class="card-body">
             <table class="table ">
                 <thead style="background-color: #3f1a56; color: white;">
@@ -31,15 +31,15 @@
                             <td>
                                 @if (item.Status == AppointmentStatus.Pending)
                                 {
-                                    <span class="badge bg-warning text-dark">Onay Bekliyor</span>
+                                    <span class="badge" style="color:black">Onay Bekliyor</span>
                                 }
                                 else if (item.Status == AppointmentStatus.Confirmed)
                                 {
-                                    <span class="badge bg-success">Onaylandı</span>
+                                    <span class="badge " style="color:black">Onaylandı</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-danger">Reddedildi</span>
+                                    <span class="badge " style="color:black">Reddedildi</span>
                                 }
                             </td>
                             <td class="text-center">
@@ -67,5 +67,8 @@
     }
     .btn-bin:hover{
         color: red ;
+    }
+    .card{
+        border: solid 1px #1111;
     }
 </style>
