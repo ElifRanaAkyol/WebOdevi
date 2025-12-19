@@ -97,7 +97,6 @@ namespace WebOdevi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Trainer trainer, int[] SelectedSpecializationIds, int[] SelectedServiceIds, List<string> SelectedAvailabilities)
         {
-            // Validasyon kontrolü
             if (!ModelState.IsValid)
             {
                 ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name");
@@ -190,7 +189,6 @@ namespace WebOdevi.Controllers
                 return NotFound();
             }
 
-            // bağımlı kayıtları siliyoruz
             if (trainer.TrainerSpecializations != null)
                 _db.TrainerSpecializations.RemoveRange(trainer.TrainerSpecializations);
 
@@ -275,7 +273,6 @@ namespace WebOdevi.Controllers
                         }
                     }
 
-                    // 3. Hizmetleri Güncelle
                     _db.TrainerServices.RemoveRange(trainer.TrainerServices);
                     if (SelectedServiceIds != null)
                     {
@@ -285,7 +282,6 @@ namespace WebOdevi.Controllers
                         }
                     }
 
-                    // 4. Müsaitlikleri Güncelle
                     _db.Availabilities.RemoveRange(trainer.TrainerAvailability);
                     if (SelectedAvailabilities != null)
                     {
@@ -308,7 +304,6 @@ namespace WebOdevi.Controllers
                 }
             }
 
-            // Hata varsa ViewBag'leri tekrar doldur
             ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name", model.FitnessCenterId);
             ViewBag.Specializations = _db.Specializations.ToList();
             ViewBag.Services = _db.Services.ToList();

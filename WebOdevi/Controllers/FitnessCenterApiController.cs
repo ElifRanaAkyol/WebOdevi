@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebOdevi.Data;
+using WebOdevi.Models;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -12,15 +14,18 @@ public class FitnessCenterApiController : ControllerBase
     {
         _db = context;
     }
-
     [HttpGet("search")]
-    public async Task<IActionResult> SearchFitnessCenters(string? serviceType)
+    public async Task<IActionResult> SearchFitnessCenters(string? trainerName)
     {
-        var query = _db.FitnessCenters.Include(fc => fc.Services).AsQueryable();
+        // Eğitmenleri de içerecek şekilde sorguyu başlatıyoruz
+        var query = _db.FitnessCenters
+            .Include(fc => fc.Trainers)
+            .AsQueryable();
 
-        if (!string.IsNullOrEmpty(serviceType))
+        // Filtreleme: Eğer bir isim girildiyse, o isme sahip eğitmenin çalıştığı salonları getir
+        if (!string.IsNullOrEmpty(trainerName))
         {
-            query = query.Where(fc => fc.Services.Any(s => s.Name.Contains(serviceType)));
+            query = query.Where(fc => fc.Trainers.Any(t => t.FullName.Contains(trainerName)));
         }
 
         var fitnessCenters = await query.ToListAsync();
@@ -29,7 +34,10 @@ public class FitnessCenterApiController : ControllerBase
             fc.Id,
             fc.Name,
             fc.Address,
-            Services = fc.Services.Select(s => s.Name).ToList()
+            Trainers = fc.Trainers.Select(t => t.FullName).ToList()
         }));
+
     }
+
+    
 }

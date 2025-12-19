@@ -2,17 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using WebOdevi.Data;
 using WebOdevi.Models;
-using WebOdevi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient<OpenAiService>(client =>
-{
-    client.BaseAddress = new Uri("https://api.openai.com/v1/");
-    client.DefaultRequestHeaders.Add("Authorization",
-        $"Bearer {builder.Configuration["OpenAI:ApiKey"]}");
-});
-
-
+//AI servisi
+builder.Services.AddHttpClient<GroqService>();
 
 // DB Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -71,7 +64,7 @@ async Task SeedRolesAndAdminAsync(WebApplication app)
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
     }
-
+    
     // admin
     var adminEmail = "b231210092@sakarya.edu.tr";
     var admin = await userManager.FindByEmailAsync(adminEmail);

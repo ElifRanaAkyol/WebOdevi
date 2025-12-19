@@ -1,0 +1,51 @@
+﻿@model WebOdevi.Models.FitnessCenter
+
+@{
+    ViewData["Title"] = "Yeni Salon Ekle";
+}
+
+<div class="container mt-5" style="padding-top: 80px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header text-white text-center py-3 rounded-top-4" style="background-color: #3f1a56;">
+                    <h4 class="mb-0"><i class="fa-solid fa-dumbbell me-2"></i>Yeni Fitness Merkezi Ekle</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold">Salon Adı</label>
+                            <input asp-for="Name" class="form-control rounded-3" placeholder="Örn: Sakura Fitness Center" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label fw-bold">Adres</label>
+                            <textarea asp-for="Address" class="form-control rounded-3" rows="3" placeholder="Tam adresi buraya yazınız..."></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn text-white btn-lg rounded-pill shadow-sm" style="background-color: #905aa8;">
+                                <i class="fa-solid fa-plus-circle me-1"></i> Salonu Kaydet
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+                                Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

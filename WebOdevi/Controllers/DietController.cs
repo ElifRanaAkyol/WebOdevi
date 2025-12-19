@@ -1,42 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebOdevi.Models.ViewModels;
-using WebOdevi.Services;
 
-namespace WebOdevi.Controllers
+public class DietController : Controller
 {
-    public class DietController : Controller
+    private readonly GroqService _groqService;
+
+    public DietController(GroqService groqService)
     {
-        private readonly OpenAiService _openAiService;
+        _groqService = groqService;
+    }
 
-        public DietController(OpenAiService openAiService)
+    [HttpGet]
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> GenerateDiet(DietInputViewModel model)
+    {
+        if (ModelState.IsValid)
         {
-            _openAiService = openAiService;
+            // API'ye gönderilecek komutu hazırlıyoruz
+            string prompt = $"Boyum {model.Height} cm, kilom {model.Weight} kg. Vücut tipim {model.BodyType} ve hedefim {model.Goal}. " +
+                            "Bana uygun 1 günlük örnek beslenme listesi ve yapmam gereken temel egzersizleri söyler misin?";
+
+            try
+            {
+                var result = await _groqService.GetAiResponse(prompt);
+                ViewBag.DietPlan = result; // View'daki ViewBag.DietPlan'a veriyi gönderiyoruz
+            }
+            catch (Exception ex)
+            {
+                ViewBag.DietPlan = "Hata Detayı: " + ex.Message;
+            }
         }
 
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> GenerateDiet(DietInputViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View("Index", model);
-
-            var prompt = $@"
-            Height: {model.Height}
-            Weight: {model.Weight}
-            Body Type: {model.BodyType}
-            Goal: {model.Goal}
-            ";
-
-            var dietPlan = await _openAiService.GetDietPlan(prompt);
-
-            ViewBag.DietPlan = dietPlan;
-            return View("Index", model);
-        }
-
+        return View("Index", model);
     }
 }

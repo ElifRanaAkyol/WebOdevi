@@ -1,9 +1,20 @@
 ﻿<div class="container mt-5" style="padding-top:70px;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div class="d-flex gap-2">
-            <input type="text" id="serviceSearch" class="form-control" placeholder="Hizmet ara (Yoga, Fitness...)" />
-            <button onclick="fetchFitnessCenters()" class="btn text-white" style="background-color: #3f1a56;">Ara</button>
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="FitnessCenter" asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-4">
+                    <i class="fa-solid fa-plus-circle me-1"></i> Yeni Spor Salonu Ekle
+                </a>
+            }
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex gap-2">
+                <input type="text" id="trainerSearch" class="form-control" placeholder="Eğitmen ismi ara" />
+                <button onclick="fetchFitnessByTrainer()" class="btn text-white" style="background-color: #3f1a56;">
+                    <i class="fa-solid fa-user-magnifying"></i> Ara
+                </button>
+            </div>
         </div>
     </div>
 
@@ -12,67 +23,77 @@
 </div>
 
 <style>
+    .btn-success {
+        transition: transform 0.2s;
+    }
+
+      
+
     .fitness-card {
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         border: none;
     }
 
         .fitness-card:hover {
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
         }
 
-    .service-badge {
-        background-color: #905aa8;
-        color: white;
-        font-size: 0.75rem;
-        margin-right: 5px;
+    .trainer-list-text {
+        font-size: 0.9rem;
+        color: #555;
     }
 </style>
 
 @section Scripts {
     <script>
-        document.addEventListener("DOMContentLoaded", fetchFitnessCenters);
+        document.addEventListener("DOMContentLoaded", fetchFitnessByTrainer);
 
-        async function fetchFitnessCenters() {
-            const service = document.getElementById("serviceSearch").value;
+        async function fetchFitnessByTrainer() {
+            const trainerName = document.getElementById("trainerSearch").value;
             const container = document.getElementById("fitnessCenterContainer");
 
-            container.innerHTML = '<div class="text-center w-100">Yükleniyor...</div>';
+            container.innerHTML = '<div class="text-center w-100 py-5"><div class="spinner-border text-primary"></div><p>Yükleniyor...</p></div>';
 
             try {
-                const response = await fetch(`/api/FitnessCenterApi/search?serviceType=${service}`);
+                const response = await fetch(`/api/FitnessCenterApi/search?trainerName=${trainerName}`);
                 const data = await response.json();
 
-                container.innerHTML = ""; 
+                container.innerHTML = "";
 
                 if (data.length === 0) {
-                    container.innerHTML = '<div class="alert alert-info w-100">Aradığınız kriterlere uygun merkez bulunamadı.</div>';
+                    container.innerHTML = '<div class="alert alert-info w-100 text-center">Bu isme sahip bir eğitmenin çalıştığı salon bulunamadı.</div>';
                     return;
                 }
 
                 data.forEach(fc => {
-                    const servicesHtml = fc.services.map(s =>
-                        `<span class="badge rounded-pill service-badge">${s}</span>`
-                    ).join('');
+                    const trainersList = fc.trainers.length > 0
+                        ? fc.trainers.map(t => `<li class="list-group-item border-0 ps-0 py-1 trainer-list-text"><i class="fa-solid fa-user-check me-2 text-success"></i>${t}</li>`).join('')
+                        : '<li class="list-group-item border-0 ps-0 text-muted small">Kayıtlı eğitmen yok</li>';
 
                     container.innerHTML += `
                         <div class="col-md-6 col-lg-4">
-                            <div class="card fitness-card shadow-lg h-100 rounded-4">
-                                <div class="card-body p-4">
-                                    <h5 class="fw-bold mb-2">${fc.name}</h5>
-                                    <p class="text-muted small mb-3"><i class="fa-solid fa-location-dot me-2"></i>${fc.address}</p>
-                                    <div class="mb-3">
-                                        <small class="d-block text-secondary mb-1">Sunulan Hizmetler:</small>
-                                        ${servicesHtml}
+                            <div class="card fitness-card shadow-sm h-100 rounded-4">
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <h5 class="fw-bold mb-1" style="color: #3f1a56;">${fc.name}</h5>
+                                    <p class="text-muted small mb-3">
+                                        <i class="fa-solid fa-location-dot me-1"></i> ${fc.address}
+                                    </p>
+
+                                    <div class="mb-4">
+                                        <h6 class="fw-bold small text-uppercase text-secondary mb-2">Görevli Eğitmenler:</h6>
+                                        <ul class="list-group list-group-flush">
+                                            ${trainersList}
+                                        </ul>
                                     </div>
-                                    <p class="small text-dark mb-4"><strong>Saatler:</strong> ${fc.workingHours}</p>
-                                    <a href="/FitnessCenter/Details/${fc.id}" class="btn w-100 rounded-pill text-white" style="background-color: #3f1a56;">İncele</a>
+
+                                    
                                 </div>
                             </div>
                         </div>
                     `;
                 });
             } catch (err) {
-                container.innerHTML = '<div class="alert alert-danger w-100">Veri çekilirken bir hata oluştu!</div>';
+                container.innerHTML = '<div class="alert alert-danger w-100 text-center">Bağlantı hatası oluştu.</div>';
             }
         }
     </script>
