@@ -1,73 +1,94 @@
 ﻿@model WebOdevi.Models.Trainer
-
 @{
-    ViewData["Title"] = "Eğitmeni Düzelt";
+    ViewData["Title"] = "Eğitmen Düzenle";
+    var selectedSpecs = ViewBag.SelectedSpecializationIds as List<int> ?? new List<int>();
+    var selectedServices = ViewBag.SelectedServiceIds as List<int> ?? new List<int>();
+    var selectedAvails = ViewBag.SelectedAvailabilities as List<string> ?? new List<string>();
 }
 
-<div class="container mt-4" style="margin-top:120px; padding:90px 20px;">
-    <div class="card shadow-lg">    
-        <div class="" style=" padding:0px 10px;">
-            <a asp-action="Index" class="btn btn-secondary mt-3">Geri Dön</a>
-        </div>
-        <form asp-action="Edit" method="post">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="Id" />
-            <div class="col-md-4 text-center p-4">
-                <img src="~/images/Trainers/trainer1.png"
-                     alt="@Model.FullName"
-                     class="img-fluid rounded-circle mb-3"
-                     style="max-width:200px;" />
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 page-wrapper shadow p-4 rounded bg-white" style="margin-top: 110px;">
+            <h2 class="text-center mb-4">Eğitmen Düzenle</h2>
+
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                @* İsim *@
                 <div class="form-group mb-3">
-                    <label asp-for="FullName"></label>
+                    <label asp-for="FullName" class="fw-bold"></label>
                     <input asp-for="FullName" class="form-control" />
                     <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
+
+                @* Fitness Center *@
                 <div class="form-group mb-3">
-                    <label asp-for="FitnessCenter.Name"></label>
-                        <input asp-for="FitnessCenter.Name" class="form-control" value="@Model.FitnessCenter.Name" />
-                        <span asp-validation-for="FitnessCenter.Name" class="text-danger"></span>
+                    <label class="fw-bold">Fitness Center</label>
+                    <select asp-for="FitnessCenterId" class="form-control" asp-items="ViewBag.FitnessCenters"></select>
                 </div>
-            </div>
-            <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">Uzmanlık Alanları</h5>
-                @if (Model.TrainerSpecializations != null && Model.TrainerSpecializations.Any())
-                {
-                    <ul>
-                        @foreach (var spec in Model.TrainerSpecializations)
+
+                @* Uzmanlık Alanları *@
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Uzmanlık Alanları</label>
+                    <div class="border p-3 rounded" style="max-height: 180px; overflow-y: auto;">
+                        @foreach (var s in ViewBag.Specializations)
                         {
-                            <li>@spec.Specialization.Name</li>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="SelectedSpecializationIds" value="@s.Id"
+                                       @(selectedSpecs.Contains(s.Id) ? "checked" : "") />
+                                <label class="form-check-label">@s.Name</label>
+                            </div>
                         }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-muted">Uzmanlık bilgisi yok.</p>
-                }
-
-                <hr />
-
-                <h5 class="card-title">Hizmetler</h5>
-                @if (Model.TrainerServices != null && Model.TrainerServices.Any())
-                {
-                    <ul>
-                        @foreach (var service in Model.TrainerServices)
-                        {
-                            <li>@service.Service.Name</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-muted">Hizmet bilgisi yok.</p>
-                }
-                    <div class="mb-5 mt-4">
-
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Kaydet</button>
-                </div>
                     </div>
-
                 </div>
 
-        </form>
+                @* Hizmetler *@
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Hizmetler</label>
+                    <div class="border p-3 rounded" style="max-height: 180px; overflow-y: auto;">
+                        @foreach (var s in ViewBag.Services)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@s.Id"
+                                       @(selectedServices.Contains(s.Id) ? "checked" : "") />
+                                <label class="form-check-label">@s.Name</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @* Müsaitlik (Availability) *@
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Müsaitlik Güncelle</label>
+                    <div class="border p-3 rounded" style="max-height: 300px; overflow-y: auto;">
+                        @foreach (WebOdevi.Data.Enums.DaysOfWeek day in Enum.GetValues(typeof(WebOdevi.Data.Enums.DaysOfWeek)))
+                        {
+                            <strong class="text-primary">@day</strong>
+                            <div class="ms-3 mb-2">
+                                @for (int hour = 9; hour <= 20; hour++)
+                                {
+                                    string hourText = hour.ToString("D2") + ":00";
+                                    string val = $"{day}|{hourText}";
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="SelectedAvailabilities" value="@val"
+                                               @(selectedAvails.Contains(val) ? "checked" : "") />
+                                        <label class="form-check-label">@hourText</label>
+                                    </div>
+                                }
+                            </div>
+                            <hr />
+                        }
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100 mt-3 text-white">Değişiklikleri Kaydet</button>
+            </form>
+
+            <div class="mt-3 text-center">
+                <a asp-action="Index">Vazgeç ve Listeye Dön</a>
+            </div>
+        </div>
+    </div>
 </div>

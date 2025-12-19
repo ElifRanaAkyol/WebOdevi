@@ -1,0 +1,79 @@
+﻿<div class="container mt-5" style="padding-top:70px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div class="d-flex gap-2">
+            <input type="text" id="serviceSearch" class="form-control" placeholder="Hizmet ara (Yoga, Fitness...)" />
+            <button onclick="fetchFitnessCenters()" class="btn text-white" style="background-color: #3f1a56;">Ara</button>
+        </div>
+    </div>
+
+    <div id="fitnessCenterContainer" class="row g-4">
+    </div>
+</div>
+
+<style>
+    .fitness-card {
+        transition: transform 0.3s ease;
+        border: none;
+    }
+
+        .fitness-card:hover {
+        }
+
+    .service-badge {
+        background-color: #905aa8;
+        color: white;
+        font-size: 0.75rem;
+        margin-right: 5px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", fetchFitnessCenters);
+
+        async function fetchFitnessCenters() {
+            const service = document.getElementById("serviceSearch").value;
+            const container = document.getElementById("fitnessCenterContainer");
+
+            container.innerHTML = '<div class="text-center w-100">Yükleniyor...</div>';
+
+            try {
+                const response = await fetch(`/api/FitnessCenterApi/search?serviceType=${service}`);
+                const data = await response.json();
+
+                container.innerHTML = ""; 
+
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="alert alert-info w-100">Aradığınız kriterlere uygun merkez bulunamadı.</div>';
+                    return;
+                }
+
+                data.forEach(fc => {
+                    const servicesHtml = fc.services.map(s =>
+                        `<span class="badge rounded-pill service-badge">${s}</span>`
+                    ).join('');
+
+                    container.innerHTML += `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card fitness-card shadow-lg h-100 rounded-4">
+                                <div class="card-body p-4">
+                                    <h5 class="fw-bold mb-2">${fc.name}</h5>
+                                    <p class="text-muted small mb-3"><i class="fa-solid fa-location-dot me-2"></i>${fc.address}</p>
+                                    <div class="mb-3">
+                                        <small class="d-block text-secondary mb-1">Sunulan Hizmetler:</small>
+                                        ${servicesHtml}
+                                    </div>
+                                    <p class="small text-dark mb-4"><strong>Saatler:</strong> ${fc.workingHours}</p>
+                                    <a href="/FitnessCenter/Details/${fc.id}" class="btn w-100 rounded-pill text-white" style="background-color: #3f1a56;">İncele</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = '<div class="alert alert-danger w-100">Veri çekilirken bir hata oluştu!</div>';
+            }
+        }
+    </script>
+}

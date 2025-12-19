@@ -114,7 +114,10 @@ namespace WebOdevi.Controllers
                 }
 
                 _db.Trainers.Add(trainer);
-                await _db.SaveChangesAsync(); 
+                await _db.SaveChangesAsync();
+
+               
+               
 
                 if (SelectedSpecializationIds != null)
                 {
@@ -217,59 +220,100 @@ namespace WebOdevi.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var trainer = _db.Trainers
-                .Include(t => t.FitnessCenter)
-                .FirstOrDefault(t => t.Id == id);
+            var trainer = await _db.Trainers
+                .Include(t => t.TrainerSpecializations)
+                .Include(t => t.TrainerServices)
+                .Include(t => t.TrainerAvailability)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
-            if (trainer == null)
-                return NotFound();
+            if (trainer == null) return NotFound();
 
-            ViewBag.FitnessCenters =
-                new SelectList(_db.FitnessCenters, "Id", "Name", trainer.FitnessCenterId);
+            ViewBag.SelectedSpecializationIds = trainer.TrainerSpecializations.Select(s => s.SpecializationId).ToList();
+            ViewBag.SelectedServiceIds = trainer.TrainerServices.Select(s => s.ServiceId).ToList();
+
+            ViewBag.SelectedAvailabilities = trainer.TrainerAvailability
+                .Select(a => $"{a.DayOfWeek}|{a.Hour}").ToList();
+
+            ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name", trainer.FitnessCenterId);
+            ViewBag.Specializations = _db.Specializations.ToList();
+            ViewBag.Services = _db.Services.ToList();
 
             return View(trainer);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Trainer model)
+        public async Task<IActionResult> Edit(int id, Trainer model, int[] SelectedSpecializationIds, int[] SelectedServiceIds, List<string> SelectedAvailabilities)
         {
-            if (id != model.Id)
-                return NotFound();
+            if (id != model.Id) return NotFound();
 
-            var trainer = await _db.Trainers
-                .Include(t => t.FitnessCenter)
-                .Include(t => t.TrainerSpecializations)
-                .Include(t => t.TrainerServices)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (trainer == null)
-                return NotFound();
-
-            if (!string.IsNullOrWhiteSpace(model.FullName) &&
-                trainer.FullName != model.FullName)
+            if (ModelState.IsValid)
             {
-                trainer.FullName = model.FullName;
+                try
+                {
+                    var trainer = await _db.Trainers
+                        .Include(t => t.TrainerSpecializations)
+                        .Include(t => t.TrainerServices)
+                        .Include(t => t.TrainerAvailability)
+                        .FirstOrDefaultAsync(t => t.Id == id);
+
+                    if (trainer == null) return NotFound();
+
+                    trainer.FullName = model.FullName;
+                    trainer.FitnessCenterId = model.FitnessCenterId;
+                    if (string.IsNullOrEmpty(trainer.ProfileImageUrl))
+                        trainer.ProfileImageUrl = "/images/Trainers/trainer1.png";
+
+                    _db.TrainerSpecializations.RemoveRange(trainer.TrainerSpecializations);
+                    if (SelectedSpecializationIds != null)
+                    {
+                        foreach (var sid in SelectedSpecializationIds)
+                        {
+                            _db.TrainerSpecializations.Add(new TrainerSpecialization { TrainerId = id, SpecializationId = sid });
+                        }
+                    }
+
+                    // 3. Hizmetleri Güncelle
+                    _db.TrainerServices.RemoveRange(trainer.TrainerServices);
+                    if (SelectedServiceIds != null)
+                    {
+                        foreach (var sid in SelectedServiceIds)
+                        {
+                            _db.TrainerServices.Add(new TrainerService { TrainerId = id, ServiceId = sid });
+                        }
+                    }
+
+                    // 4. Müsaitlikleri Güncelle
+                    _db.Availabilities.RemoveRange(trainer.TrainerAvailability);
+                    if (SelectedAvailabilities != null)
+                    {
+                        foreach (var item in SelectedAvailabilities)
+                        {
+                            var parts = item.Split('|');
+                            if (parts.Length == 2 && Enum.TryParse<DaysOfWeek>(parts[0], out var day))
+                            {
+                                _db.Availabilities.Add(new Availability { TrainerId = id, DayOfWeek = day, Hour = parts[1] });
+                            }
+                        }
+                    }
+
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Güncelleme sırasında hata oluştu: " + ex.Message);
+                }
             }
 
-            if (trainer.FitnessCenter != null &&
-                model.FitnessCenter != null &&
-                !string.IsNullOrWhiteSpace(model.FitnessCenter.Name) &&
-                trainer.FitnessCenter.Name != model.FitnessCenter.Name)
-            {
-                trainer.FitnessCenter.Name = model.FitnessCenter.Name;
-            }
-
-            
-
-            await _db.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            // Hata varsa ViewBag'leri tekrar doldur
+            ViewBag.FitnessCenters = new SelectList(_db.FitnessCenters, "Id", "Name", model.FitnessCenterId);
+            ViewBag.Specializations = _db.Specializations.ToList();
+            ViewBag.Services = _db.Services.ToList();
+            return View(model);
         }
-
-
 
     }
 }

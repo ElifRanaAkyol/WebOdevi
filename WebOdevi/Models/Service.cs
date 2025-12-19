@@ -12,8 +12,9 @@ namespace WebOdevi.Models
         public int trainingFee { get; set; }
 
 
-        public List<TrainerService> TrainerServices { get; set; }
-        public List<Appointment> Appointments { get; set; }
+        public List<TrainerService>? TrainerServices { get; set; }
+        public List<FitnessCenterServices>? FitnessCenterServices { get; set; }
+        public List<Appointment>? Appointments { get; set; }
 
     }
 }

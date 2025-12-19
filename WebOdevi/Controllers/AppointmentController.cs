@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System.Security.Claims;
@@ -11,10 +13,12 @@ namespace WebOdevi.Controllers
     public class AppointmentController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<User> _userManager;
 
-        public AppointmentController(ApplicationDbContext db)
+        public AppointmentController(ApplicationDbContext db, UserManager<User> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -71,18 +75,27 @@ namespace WebOdevi.Controllers
             return RedirectToAction("Details", "Trainer", new { id = appointment.TrainerId });
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            var appointment = await _db.Appointments
-                .FirstOrDefaultAsync(a => a.Id == id);
 
-            if(appointment == null)
+        [Authorize]
+        public async Task<IActionResult> DeleteAppointment(int id)
+        {
+            var appointment = await _db.Appointments.FindAsync(id);
+
+            if (appointment == null)
             {
                 return NotFound();
             }
+
+            var userId = _userManager.GetUserId(User);
+            if (appointment.UserId != userId)
+            {
+                return Forbid();
+            }
+
             _db.Appointments.Remove(appointment);
             await _db.SaveChangesAsync();
-            return View();
+
+            return RedirectToAction("MyAppointments", "Account");
         }
     }
 }

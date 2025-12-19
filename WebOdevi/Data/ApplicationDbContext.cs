@@ -17,6 +17,7 @@ namespace WebOdevi.Data
         public DbSet<TrainerSpecialization> TrainerSpecializations { get; set; }
 
         public DbSet<FitnessCenter> FitnessCenters { get; set; }
+        public DbSet<FitnessCenterServices> FitnessCenterServices { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -25,7 +26,6 @@ namespace WebOdevi.Data
 
             
 
-            // TrainerService — Junction Table
             builder.Entity<TrainerService>()
                 .HasKey(x => new { x.TrainerId, x.ServiceId });
 
@@ -41,7 +41,21 @@ namespace WebOdevi.Data
                 .HasForeignKey(x => x.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // TrainerSpecialization — Junction Table
+            builder.Entity<FitnessCenterServices>()
+                .HasKey(x => new { x.fitnessCenterId, x.serviceId });
+
+            builder.Entity<FitnessCenterServices>()
+                .HasOne(x => x.fitnessCenter)
+                .WithMany(t => t.FitnessCenterServices)
+                .HasForeignKey(x => x.fitnessCenterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<FitnessCenterServices>()
+                .HasOne(x => x.Service)
+                .WithMany(s => s.FitnessCenterServices)
+                .HasForeignKey(x => x.serviceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<TrainerSpecialization>()
                 .HasKey(x => new { x.TrainerId, x.SpecializationId });
 
@@ -57,14 +71,12 @@ namespace WebOdevi.Data
                 .HasForeignKey(x => x.SpecializationId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Availability — Normal PK olmalı (Id)
             builder.Entity<Availability>()
                 .HasOne(a => a.Trainer)
                 .WithMany(t => t.TrainerAvailability)
                 .HasForeignKey(a => a.TrainerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Appointment — Normal PK (Id)
             builder.Entity<Appointment>()
                 .HasOne(a => a.User)
                 .WithMany(u => u.Appointments)
@@ -83,7 +95,6 @@ namespace WebOdevi.Data
                 .HasForeignKey(a => a.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Trainer
             builder.Entity<Trainer>()
                 .HasOne(t => t.FitnessCenter)
                 .WithMany(f => f.Trainers)

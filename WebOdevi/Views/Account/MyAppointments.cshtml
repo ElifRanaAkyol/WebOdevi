@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WebOdevi.Models.Appointment>
+﻿@using WebOdevi.Data.Enums
+@model IEnumerable<WebOdevi.Models.Appointment>
 <div class="container mt-5" style="padding-top:60px;">
 
     <div class="card shadow border-0 rounded-4">
@@ -11,6 +12,8 @@
                         <th>Gün</th>
                         <th>Saat</th>
                         <th>Ücret</th>
+                        <th>Durum</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -24,9 +27,29 @@
                             <td>@item.DayOfWeek</td>
                             <td>@item.Hour</td>
 
-                            <td>@item.Service.trainingFee TL   </td>
-                            <td class="btn-bin" asp-action="Delete" asp-route-id="">
-                                <i class="fa-solid fa-trash"></i>
+                            <td>@item.Service.trainingFee TL</td>
+                            <td>
+                                @if (item.Status == AppointmentStatus.Pending)
+                                {
+                                    <span class="badge bg-warning text-dark">Onay Bekliyor</span>
+                                }
+                                else if (item.Status == AppointmentStatus.Confirmed)
+                                {
+                                    <span class="badge bg-success">Onaylandı</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Reddedildi</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <a  asp-controller="Appointment"
+                                    asp-action="DeleteAppointment"
+                                   asp-route-id="@item.Id"
+                                   class="btn-bin"
+                                   onclick="return confirm('Bu randevuyu silmek istediğinize emin misiniz?')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
                             </td>
                                 
 
