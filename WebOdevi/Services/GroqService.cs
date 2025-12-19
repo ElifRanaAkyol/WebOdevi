@@ -4,7 +4,7 @@ using System.Text.Json;
 public class GroqService
 {
     private readonly string _apiKey = ""; 
-    private readonly string _apiUrl = "https://api.groq.com/openai/v1/chat/completions";
+    private readonly string _apiUrl = "";
     private readonly HttpClient _httpClient;
 
     public GroqService(HttpClient httpClient)
